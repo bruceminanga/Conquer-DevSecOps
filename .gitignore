@@ -1,0 +1,61 @@
+# ==========================================
+# 🚨 CRITICAL: DevOps & Cloud Secrets
+# Never push credentials or cluster tokens!
+# ==========================================
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.cert
+id_rsa
+id_rsa.pub
+*.tfvars
+*.tfvars.json
+terraform.tfstate*
+kubeconfig
+*kubeconfig*
+*.credentials
+
+# ==========================================
+# 📝 Note Apps & Editors
+# ==========================================
+# Obsidian: Ignore workspace layouts (they change with every click and cause merge conflicts)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+.trash/
+
+# VS Code & JetBrains
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ==========================================
+# 💻 Operating System Junk
+# ==========================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+desktop.ini
+
+# ==========================================
+# 🧪 Lab Runs & Temp Files
+# ==========================================
+*.log
+__pycache__/
+*.pyc
+.venv/
+venv/
+node_modules/
+dist/
+build/
