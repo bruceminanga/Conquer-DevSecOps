@@ -2,20 +2,22 @@
 
 Companies aren't inventing new problems; they are just using different vendors to solve the same fundamental engineering challenges.
 
-Master the problem in this specific sequence, and tool switching becomes trivial. 👇
+Master the problems in this specific sequence, and tool switching becomes trivial.
+
+---
 
 ## 🟢 Phase 1: The Core Foundation
 
 ### 1️⃣ OS, Networking & Scripting (Start Here)
 
 - **The Problem:** Connecting APIs, automating operational tasks, and managing system compute.
-- **The Tools:** Linux CLI, Bash, Python, Networking (DNS, TCP/IP). *Extra:* Proxies & Edge Routers.
+- **The Tools:** Linux CLI, Bash, Python, Networking (DNS, TCP/IP, Proxies, Edge Routers).
 - **The Core Concept:** The universal foundation that connects every other layer. If you do not understand the operating system and how packets move across a network, modern cloud tools will feel like black boxes.
 
 ### 2️⃣ Containerization & Orchestration
 
 - **The Problem:** *"It works on my machine, but breaks in production."*
-- **The Tools:** Containerization (Docker, Podman), [Orchestration](./Kubernetes/kubernetes.md), EKS, AKS, GKE).
+- **The Tools:** Containerization (Docker, Podman), Orchestration ([Kubernetes](./Kubernetes/kubernetes.md), EKS, AKS, GKE).
 - **The Core Concept:** Packaging code + dependencies into portable OCI images and scheduling/scaling them across distributed compute nodes.
 
 ### 3️⃣ Artifact & Registry Management
@@ -24,18 +26,20 @@ Master the problem in this specific sequence, and tool switching becomes trivial
 - **The Tools:** Docker Hub, AWS ECR, JFrog Artifactory, Sonatype Nexus.
 - **The Core Concept:** Creating a centralized, version-controlled vault for your container images, dependencies, and compiled application packages.
 
+---
+
 ## 🟡 Phase 2: Delivery & Infrastructure Automation
 
 ### 4️⃣ CI/CD & GitOps Delivery
 
 - **The Problem:** Slow, manual software releases and production configuration drift.
-- **The Tools:** CI/CD: (GitHub Actions, GitLab CI/CD, Jenkins), GitOps: (ArgoCD, Flux).
+- **The Tools:** CI/CD (GitHub Actions, GitLab CI/CD, Jenkins), GitOps (ArgoCD, Flux).
 - **The Core Concept:** Automating the path to production. "Pushing" code through testing/building (CI), and "Pulling" the new state into clusters via GitOps (CD).
 
 ### 5️⃣ Infrastructure as Code (IaC)
 
 - **The Problem:** Manual, error-prone cloud provisioning through clicking in web consoles.
-- **The Tools:** Terraform, Pulumi, OpenTofu, AWS CloudFormation (Provider: AWS).
+- **The Tools:** Terraform, OpenTofu, Pulumi, AWS CloudFormation.
 - **The Core Concept:** Managing cloud infrastructure state declaratively via version-controlled code.
 
 ### 6️⃣ Configuration Management
@@ -44,7 +48,9 @@ Master the problem in this specific sequence, and tool switching becomes trivial
 - **The Tools:** Ansible, Chef, Puppet, SaltStack.
 - **The Core Concept:** Automating server configuration and enforcing desired state without writing hundreds of custom, brittle bash scripts.
 
-> 🛑 **Cloud-Native Alert:** In a modern cloud-native world, we rarely configure servers this way. Where did Ansible, Puppet, and Chef go in the Kubernetes era? ⚙️
+> ℹ️ **Cloud-Native Note:** In modern Kubernetes workflows, mutable server configuration has largely been replaced by **immutable infrastructure**—baking dependencies upfront with tools like Packer or relying on managed, minimal node OS images (e.g., Bottlerocket, Talos).
+
+---
 
 ## 🟠 Phase 3: Securing & Observing the Platform
 
@@ -66,6 +72,8 @@ Master the problem in this specific sequence, and tool switching becomes trivial
 - **The Tools:** OpenTelemetry, Jaeger, ELK Stack (Elasticsearch), Grafana Loki.
 - **The Core Concept:** Shipping structured text logs and distributed request traces to a centralized search index to debug incidents fast.
 
+---
+
 ## 🔴 Phase 4: Production Maturity & Scale
 
 ### 🔟 Site Reliability Engineering (SRE): SLOs & Incident Response
@@ -79,6 +87,8 @@ Master the problem in this specific sequence, and tool switching becomes trivial
 - **The Problem:** *"The infrastructure scales seamlessly—but nobody watched the cost until the cloud bill tripled."*
 - **The Tools:** Infracost, Kubecost, AWS Cost Explorer, CloudHealth, GCP Cost Management.
 - **The Core Concept:** Attributing cloud spend to teams/services (tagging/showback), rightsizing compute, and integrating cost visibility into the pull request / IaC stage.
+
+---
 
 ## 🎯 The Golden Rule
 
