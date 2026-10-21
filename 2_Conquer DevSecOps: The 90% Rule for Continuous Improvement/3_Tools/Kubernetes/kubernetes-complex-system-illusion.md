@@ -45,7 +45,3 @@ Troubleshooting distributed systems isn’t guesswork. It's just asking:
 
 Once you stop viewing complex systems as monoliths and start seeing them as handoffs between specialized parts, nothing is a black box anymore.
 
-Question:  
-Which worker in your cluster had ONE job today... and completely failed to do it? 👇
-
-`#Kubernetes` `#SoftwareEngineering` `#DevOps` `#CloudComputing` `#SystemDesign` `#TechCareers`
