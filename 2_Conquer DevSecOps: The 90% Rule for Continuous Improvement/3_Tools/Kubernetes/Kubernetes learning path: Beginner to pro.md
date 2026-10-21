@@ -95,7 +95,7 @@ For enterprise-grade applications, tools like Istio or Linkerd sit on top of Kub
 # Level 1 — Getting familiar with Kubernetes primitives & architecture 
 Goal: Understand how Kubernetes works under the hood and interact with its core building blocks.
 
-* Architecture: (i)🛠️ Troubleshooting: Understand the architecture — control plane, worker nodes, API server, etcd, kubelet, scheduler. (ii) From Docker Layers to Kubernetes Hierarchies: The "Nesting Doll" Architecture 🪆 (iii) 🧵 𝗡𝗼𝗯𝗼𝗱𝘆 𝘁𝗲𝗹𝗹𝘀 𝘆𝗼𝘂 𝘁𝗵𝗶𝘀 𝗮𝗯𝗼𝘂𝘁 𝗬𝗔𝗠𝗟 (iv) From Cluster to Code: Understanding Kubernetes Abstraction Layers (v) Kubernetes Is Basically a Wrapper Within a Wrapper 📦
+* Architecture: (i)🛠️ Troubleshooting: [Understand the architecture — control plane, worker nodes, API server, etcd, kubelet, scheduler](kubernetes-architecture.md) (ii) From Docker Layers to Kubernetes Hierarchies: The "Nesting Doll" Architecture 🪆 (iii) 🧵 𝗡𝗼𝗯𝗼𝗱𝘆 𝘁𝗲𝗹𝗹𝘀 𝘆𝗼𝘂 𝘁𝗵𝗶𝘀 𝗮𝗯𝗼𝘂𝘁 𝗬𝗔𝗠𝗟 (iv) From Cluster to Code: Understanding Kubernetes Abstraction Layers (v) Kubernetes Is Basically a Wrapper Within a Wrapper 📦
 * Understand what a Pod is and deploy one(Pod → Container)
 * Understand what a Deployment is and create one (Deployment → ReplicaSet → Pod → Container)
 * Master imperative vs declarative management
