@@ -13,5 +13,5 @@
 #### How:
 
 * Kubernetes didn't solve a container problem. It solved a coordination problem.
-* [Kubernetes Learning Path: Beginner to Pro](<Kubernetes learning path: Beginner to pro.md>)
+* [Kubernetes Learning Path: Beginner to Pro](kubernetes-learning-path-beginner-to-pro.md)
 * ORCHESTRATED. Scaled. Self-Healed. — The Complete Cluster Checklist
