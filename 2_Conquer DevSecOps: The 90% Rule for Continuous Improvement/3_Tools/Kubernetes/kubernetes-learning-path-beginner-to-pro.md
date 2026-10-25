@@ -39,14 +39,27 @@ Kubernetes enforces 4 fundamental networking rules:
   * [Complex Systems Are an Illusion: Breaking Down the Components](kubernetes-complex-system-illusion.md)
   * Abstraction Layers: How Pods wrap Containers, and Deployments wrap ReplicaSets
   * Writing Clean YAML: Structuring declarative manifests
-* Deploy and inspect a standalone Pod (`Pod → Container`)
-* Manage application lifecycles with Deployments (`Deployment → ReplicaSet → Pod`)
-* Master declarative management (`kubectl apply`) vs. imperative debugging (`kubectl run`, `kubectl create`)
-* Connect workloads using Labels and Selectors
-* Expose applications using ClusterIP, NodePort, and LoadBalancer Services
-* Debug running workloads using `kubectl logs`, `kubectl exec`, and `kubectl describe`
-* Troubleshoot local port mappings with `kubectl port-forward`
-* Organize resources using Namespaces and observe self-healing when terminating pods
+1. [Understand what a Pod is and deploy one](kubernetes-standalone-pod.md) (Pod → Container)
+
+2. [Understand what a Deployment is and create one](kubernetes-deployment-lifecycle.md) (Deployment → ReplicaSet → Pod → Container)
+
+3. [Master imperative vs declarative management](kubernetes-imperative-vs-declarative-management.md)
+
+4. [Understand Labels and Selectors](kubernetes-labels-selectors-deployments-pods-services.md) — how Deployments, Pods and Services connect
+
+5. [Scale a Deployment up and down](kubernetes-deployment-scaling.md)
+
+6. [Understand what a Service is and expose a Deployment](kubernetes-services-expose-deployment.md)
+
+7. [Understand ClusterIP, NodePort and LoadBalancer](kubernetes-service-types-clusterip-nodeport-loadbalancer.md)
+
+8. [Use kubectl port-forward for local testing and debugging](kubectl-port-forward-local-testing-debugging.md)
+
+9. [Inspect and debug a running Pod — logs, exec, describe](kubernetes-pod-debugging-logs-exec-describe.md)
+
+10. [Delete and recreate resources — observe self-healing](kubernetes-self-healing-delete-recreate-resources.md)
+
+11. [Understand Kubernetes Namespaces and create your own](kubernetes-namespaces-create-manage.md)
 
 ---
 
