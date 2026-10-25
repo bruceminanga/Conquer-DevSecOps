@@ -66,33 +66,58 @@ Kubernetes enforces 4 fundamental networking rules:
 ## Level 2 — Workloads, Storage & Configuration
 **Goal:** Deploy, configure, and manage real-world, multi-tier applications reliably.
 
-* Decouple configuration from code using **ConfigMaps**
-* Manage sensitive data with **Secrets** (base64 basics and access restrictions)
-* Persist data with **PersistentVolumes (PV)**, **PersistentVolumeClaims (PVC)**, and **StorageClasses**
-* Implement dynamic volume provisioning via the **Container Storage Interface (CSI)**
-* Prevent noisy neighbors: configure resource `requests` and `limits` (CPU/Memory)
-* Implement health checks: **Liveness**, **Readiness**, and **Startup** probes
-* Multi-container patterns: using Sidecar and Adapter containers
-* Deploy a full multi-tier app (Frontend + API Backend + Persistent Database)
-* Run batch processing and scheduled tasks using **Jobs** and **CronJobs**
-* Achieve zero-downtime rollouts: graceful shutdown, `SIGTERM`, and `preStop` lifecycle hooks
+1. [Deploy a real application on Kubernetes](kubernetes-deploy-real-application.md)
+
+2. [Use ConfigMaps to manage application configuration](kubernetes-configmaps-application-configuration.md)
+
+3. [Use Secrets to manage sensitive data](kubernetes-secrets-sensitive-data.md)
+
+4. [Attach persistent storage with PersistentVolumes and PersistentVolumeClaims](kubernetes-persistent-volumes-persistent-volume-claims.md)
+
+5. [Understand StorageClasses and the Container Storage Interface for dynamic provisioning](kubernetes-storageclasses-csi-dynamic-provisioning.md)
+
+6. [Set resource requests and limits](kubernetes-resource-requests-limits.md)
+
+7. [Configure liveness and readiness probes](kubernetes-liveness-readiness-probes.md)
+
+8. [Configure Startup probes for slow-starting applications](kubernetes-startup-probes.md)
+
+9. [Use a multi-container Pod — sidecar pattern](kubernetes-multi-container-pod-sidecar-pattern.md)
+
+10. [Deploy a multi-tier app — frontend + backend + database](kubernetes-multi-tier-app-frontend-backend-database.md)
+
+11. [Run batch workloads using Jobs and CronJobs](kubernetes-jobs-cronjobs.md)
+
+12. [Understand graceful shutdown — SIGTERM and preStop hooks for zero-downtime deployments](kubernetes-graceful-shutdown-sigterm-prestop.md)
 
 ---
 
 ## Level 3 — Cluster Operations & Traffic Management
 **Goal:** Manage traffic ingress, scale dynamically, and secure internal cluster communications.
 
-* Package and release applications using **Helm** (templates, values, and releases)
-* Implement Layer 7 HTTP/HTTPS routing using an **Ingress Controller** (NGINX / Traefik)
-* Automate TLS certificate issuance and renewal with **cert-manager** and Let's Encrypt
-* Modernize traffic routing using the **Gateway API**
-* Scale workloads automatically based on CPU/RAM with the **Horizontal Pod Autoscaler (HPA)**
-* Event-driven scaling with **KEDA** (Kafka queues, Redis metrics, cron schedules)
-* Secure the control plane using **Role-Based Access Control (RBAC)**: Roles, ClusterRoles, and ServiceAccounts
-* Harden cluster isolation using **Network Policies** (default-deny, namespace/pod isolation)
-* Run system-level daemons on every node using **DaemonSets**
-* Deploy stateful workloads safely using **StatefulSets** (ordered startups and stable network IDs)
-* Advanced placement: **Taints & Tolerations**, **Node Selectors**, and **Node Affinity/Anti-Affinity**
+1. [Install and use Helm to deploy applications](kubernetes-install-use-helm.md)
+
+2. [Write your own Helm chart](kubernetes-write-helm-chart.md)
+
+3. [Set up Ingress and route traffic to multiple services](kubernetes-ingress-multiple-services.md)
+
+4. [Set up Cert-Manager for automatic TLS certificates via Let's Encrypt](kubernetes-cert-manager-lets-encrypt-tls.md) — for production, not locally
+
+5. [Learn the Gateway API — the modern successor to Ingress](kubernetes-gateway-api.md)
+
+6. [Configure Horizontal Pod Autoscaler](kubernetes-horizontal-pod-autoscaler.md)
+
+7. [Explore Vertical Pod Autoscaler and KEDA for event-driven autoscaling](kubernetes-vertical-pod-autoscaler-keda.md)
+
+8. [Understand and apply RBAC — Roles, RoleBindings, ClusterRoles, ServiceAccounts](kubernetes-rbac-roles-bindings-serviceaccounts.md)
+
+9. [Apply Network Policies to restrict pod-to-pod traffic](kubernetes-network-policies.md)
+
+10. [Understand and use Init Containers](kubernetes-init-containers.md)
+
+11. [Understand DaemonSets and StatefulSets](kubernetes-daemonsets-statefulsets.md)
+
+12. [Master advanced scheduling — Taints & Tolerations, Node Selectors, Node Affinity/Anti-affinity](kubernetes-advanced-scheduling-taints-tolerations-affinity.md)
 
 ---
 
