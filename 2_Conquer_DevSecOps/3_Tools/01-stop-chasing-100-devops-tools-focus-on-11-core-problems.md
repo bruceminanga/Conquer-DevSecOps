@@ -39,7 +39,7 @@ Master the problems in this specific sequence, and tool switching becomes trivia
 ### 5️⃣ Infrastructure as Code (IaC)
 
 - **The Problem:** Manual, error-prone cloud provisioning through clicking in web consoles.
-- **The Tools:** Terraform, OpenTofu, Pulumi, AWS CloudFormation.
+- **The Tools:** [Terraform](./Terraform/terraform-learning-path.md), OpenTofu, Pulumi, AWS CloudFormation.
 - **The Core Concept:** Managing cloud infrastructure state declaratively via version-controlled code.
 
 ### 6️⃣ Configuration Management
