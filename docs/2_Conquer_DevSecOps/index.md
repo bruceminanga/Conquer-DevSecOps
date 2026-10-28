@@ -1,4 +1,4 @@
-# Conquer DevSecOps
+# DevSecOps Articles
 
 Welcome to the DevSecOps section!
 
