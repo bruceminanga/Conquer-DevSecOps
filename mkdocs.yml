@@ -1,5 +1,5 @@
 site_name: Conquer DevSecOps
-site_url: https://bruceminanga.github.io/Mastering-DevSecOps/
+site_url: https://bruceminanga.github.io/Conquer-DevSecOps/
 site_author: Bruce Minanga
 copyright: Copyright &copy; Bruce Minanga
 
@@ -7,8 +7,8 @@ extra:
   generator: false
 
 # Adds the GitHub icon, stars, and repository link in the top-right header
-repo_url: https://github.com/bruceminanga/Mastering-DevSecOps
-repo_name: bruceminanga/Mastering-DevSecOps
+repo_url: https://github.com/bruceminanga/Conquer-DevSecOps
+repo_name: bruceminanga/Conquer-DevSecOps
 
 theme:
   name: material
@@ -42,7 +42,7 @@ theme:
 nav:
   - Home: index.md
   - Hiring in DevOps: hiring_DevOps_Engineering.md
-  - DevSecOps playground: "1_DevOps Articles/"
+  - DevSecOps playground: "1_DevOps_playground/"
   - 🔥 DevSecOps Articles: 2_Conquer_DevSecOps/
 
 # --- CRITICAL FOR DEVSECOPS & CODE DOCUMENTATION ---

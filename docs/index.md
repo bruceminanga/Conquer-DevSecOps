@@ -20,6 +20,8 @@ Here: 👇
 
 ### Pillar 1: Culture is Infrastructure
 
+- [The most expensive mistake beginners make isn’t technical. It’s cultural.](https://www.linkedin.com/posts/bruce-minanga-768a55240_devops-share-7458867582075473920-hBp6)
+- [Can a culture created today survive forever](https://www.linkedin.com/posts/bruce-minanga-768a55240_devops-legacysystems-culture-share-7458903886888820736-OTir)
 - [DevOps Rule #1: Fix the system, not the person](https://lnkd.in/p/dT_cTqPE)
 - [Developers Are Our Customers. Act Like It.](https://www.linkedin.com/posts/bruce-minanga-768a55240_devops-platformengineering-developerexperience-share-7454134836392316928-sFZO)
 - [The DevOps Mindset Myth: What Recruiters Get Wrong About "How You Think"](https://www.linkedin.com/pulse/devops-mindset-myth-what-recruiters-get-wrong-how-you-bruce-minanga-t0ydf)
@@ -57,6 +59,7 @@ Here: 👇
 - [Is DevOps Engineering Really More Than Just a Toolchain?](https://www.linkedin.com/posts/bruce-minanga-768a55240_devopsengineering-devsecops-finops-activity-7449321786254503936-9s0H)
 - [Are your DevOps tools Imperative or Declarative?](https://www.linkedin.com/posts/bruce-minanga-768a55240_devops-kubernetes-terraform-activity-7446642343010574336-sDyK)
 - [Do we still need memorization in DevSecOps Engineering?](https://www.linkedin.com/pulse/do-we-still-need-memorization-devsecops-engineering-bruce-minanga-hav8f)
+- [Stop Memorizing Commands. Start Engineering Your Workflow.](https://www.linkedin.com/pulse/stop-memorizing-commands-start-engineering-your-workflow-minanga-f7uvf)
 - [Stop trying to memorize every DevOps feature upfront.](https://www.linkedin.com/posts/bruce-minanga-768a55240_learningdevopsengineering-share-7458072515475689472-Cftn)
 - [The Platform Engineering Framework: Questions Every Engineer Should Answer Before Picking a Tool — Editions: 2026](https://www.linkedin.com/pulse/platform-engineering-framework-questions-every-engineer-bruce-minanga-zvzrf/)
 - [The Anatomy of a Platform Engineering Monorepo: A Complete Project Structure Tree](https://www.linkedin.com/pulse/anatomy-platform-engineering-monorepo-complete-project-bruce-minanga-gshff)
