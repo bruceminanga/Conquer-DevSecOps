@@ -16,11 +16,11 @@ You are given a terminal with 30–45 minutes on the clock, no access to ChatGPT
 
 ### What Interviewers Break Under the Hood
 
-| Failure Domain | What They Intentionally Break | What They Are Testing |
-| :--- | :--- | :--- |
-| **Networking & DNS** | Broken CoreDNS deployment, misconfigured `kube-proxy`, or restrictive `NetworkPolicy`. | Can you trace packet flow from **Ingress → Service → Pod IP**? |
-| **Authentication & RBAC** | Misconfigured `ServiceAccount` tokens or an expired/corrupted `kubeconfig`. | Do you know how the Kubernetes API Server validates identity and permissions? |
-| **Scheduling & Node Health** | Nodes with manual `Taints` that don't match pod `Tolerations`, or depleted ephemeral storage. | Do you know why a pod stays stuck in `Pending` vs. `CrashLoopBackOff`? |
+| Failure Domain               | What They Intentionally Break                                                                 | What They Are Testing                                                         |
+| :--------------------------- | :-------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------- |
+| **Networking & DNS**         | Broken CoreDNS deployment, misconfigured `kube-proxy`, or restrictive `NetworkPolicy`.        | Can you trace packet flow from **Ingress → Service → Pod IP**?                |
+| **Authentication & RBAC**    | Misconfigured `ServiceAccount` tokens or an expired/corrupted `kubeconfig`.                   | Do you know how the Kubernetes API Server validates identity and permissions? |
+| **Scheduling & Node Health** | Nodes with manual `Taints` that don't match pod `Tolerations`, or depleted ephemeral storage. | Do you know why a pod stays stuck in `Pending` vs. `CrashLoopBackOff`?        |
 
 ---
 
@@ -75,10 +75,16 @@ Instead, they will challenge the architectural decisions to verify whether you u
 
 ## The Takeaway
 
-```text
-Traditional Interview                  Modern AI-Era Interview
-┌───────────────────────────────────┐    ┌───────────────────────────────────┐
-│ • Can you write a Helm chart?     │    │ • Why did you choose this chart?  │
-│ • Syntax and manifest generation  │ ➔  │ • Live, terminal-based debugging  │
-│ • "It works on my machine" demos  │    │ • Kernel, network & failure modes │
-└───────────────────────────────────┘    └───────────────────────────────────┘
+<div class="grid" markdown>
+
+!!! warning "Traditional Interview"
+    * **Can you write a Helm chart?**
+    * Syntax and manifest generation
+    * "It works on my machine" demos
+
+!!! success "Modern AI-Era Interview"
+    * **Why did you choose this chart?**
+    * Live, terminal-based debugging
+    * Kernel, network & failure modes
+
+</div>
