@@ -75,16 +75,21 @@ Instead, they will challenge the architectural decisions to verify whether you u
 
 ## The Takeaway
 
-<div class="grid" markdown>
+```mermaid
+flowchart LR
+    subgraph Traditional ["❌ Traditional Interview"]
+        direction TB
+        A["• Can you write a Helm chart?
+        • Syntax and manifest generation
+        • 'It works on my machine' demos"]
+    end
 
-!!! warning "Traditional Interview"
-    * **Can you write a Helm chart?**
-    * Syntax and manifest generation
-    * "It works on my machine" demos
+    subgraph Modern ["✅ Modern AI-Era Interview"]
+        direction TB
+        B["• Why did you choose this chart?
+        • Live, terminal-based debugging
+        • Kernel, network & failure modes"]
+    end
 
-!!! success "Modern AI-Era Interview"
-    * **Why did you choose this chart?**
-    * Live, terminal-based debugging
-    * Kernel, network & failure modes
-
-</div>
+    Traditional ==>|Shifts To| Modern
+```
