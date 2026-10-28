@@ -1,6 +1,8 @@
 
 # 🛡️ Conquer DevSecOps
 
+![Conquer DevSecOps](<Conquer DevOps.png>)
+
 ### How:
 
 Building systems that are resilient (designed to survive failure), scalable (built to handle massive growth), and secure by default—all while driving cost efficiency and a frictionless developer experience.
