@@ -39,7 +39,9 @@ Kubernetes enforces 4 fundamental networking rules:
   * [Complex Systems Are an Illusion: Breaking Down the Components](kubernetes-complex-system-illusion.md)
   * Abstraction Layers: How Pods wrap Containers, and Deployments wrap ReplicaSets
   * Writing Clean YAML: Structuring declarative manifests
-  
+
+<!-- -->
+
 1. [Understand what a Pod is and deploy one](kubernetes-standalone-pod.md) (Pod → Container)
 
 2. [Understand what a Deployment is and create one](kubernetes-deployment-lifecycle.md) (Deployment → ReplicaSet → Pod → Container)
