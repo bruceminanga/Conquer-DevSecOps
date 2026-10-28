@@ -1,0 +1,1144 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bruce Minanga">
+      
+      
+        <link rel="canonical" href="https://bruceminanga.github.io/Conquer-DevSecOps/2_Conquer_DevSecOps/3_Tools/Terraform/13-terraform-debugging/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>🛠️ The Ultimate Terraform Debugging Playbook: Mastering TF_LOG & terraform console - Conquer DevSecOps</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-ultimate-terraform-debugging-playbook-mastering-tf_log-terraform-console" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-header__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Conquer DevSecOps
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🛠️ The Ultimate Terraform Debugging Playbook: Mastering TF_LOG &amp; terraform console
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-nav__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Conquer DevSecOps
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hiring_DevOps_Engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hiring in DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../1_DevOps_playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevSecOps playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔥 DevSecOps Articles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-the-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧠 PART 1: The "Why"
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧠 PART 1: The &#34;Why&#34;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-terraform-console-the-logic-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💻 Why terraform console? (The Logic Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-tf_log-the-execution-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📡 Why TF_LOG? (The Execution Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-the-right-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Choosing the Right Log Level
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📌 Choosing the Right Log Level">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#granular-logging-core-vs-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Granular Logging (Core vs. Provider)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-the-ultimate-debugging-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 PART 2: The Ultimate Debugging Runbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 PART 2: The Ultimate Debugging Runbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-triage-and-isolation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Phase 1: Triage and Isolation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🔍 Phase 1: Triage and Isolation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-run-static-validation-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Run Static Validation First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-analyze-the-error-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Analyze the Error Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-debugging-logic-with-terraform-console" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💻 Phase 2: Debugging Logic with terraform console
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 Phase 2: Debugging Logic with terraform console">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialize-working-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialize Working Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-launch-the-console-repl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Launch the Console REPL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-inspect-variables-and-live-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Inspect Variables and Live State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-test-built-in-functions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Test Built-in Functions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-test-complex-comprehensions-filters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Test Complex Comprehensions &amp; Filters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-exit-the-repl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Exit the REPL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-isolating-failing-resources-with-target" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚙️ Phase 3: Isolating Failing Resources with -target
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-debugging-execution-with-tf_log" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📡 Phase 4: Debugging Execution with TF_LOG
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📡 Phase 4: Debugging Execution with TF_LOG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-set-the-log-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Set the Log Level
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-route-output-to-a-dedicated-log-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Route Output to a Dedicated Log File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-reproduce-the-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Reproduce the Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-analyze-the-captured-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Analyze the Captured Logs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-fixing-broken-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗄️ Phase 5: Fixing Broken State
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🗄️ Phase 5: Fixing Broken State">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#list-all-tracked-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        List All Tracked Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inspect-state-attributes-of-a-specific-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspect State Attributes of a Specific Resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remove-orphaned-resources-from-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove Orphaned Resources from State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#import-existing-infrastructure-into-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Import Existing Infrastructure into State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-post-debug-sanitization-cleanup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧹 Phase 6: Post-Debug Sanitization &amp; Cleanup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧹 Phase 6: Post-Debug Sanitization &amp; Cleanup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-unset-logging-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Unset Logging Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-securely-delete-the-debug-log-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Securely Delete the Debug Log File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-with-clean-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Verify with Clean Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Summary Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-ultimate-terraform-debugging-playbook-mastering-tf_log-terraform-console">🛠️ The Ultimate Terraform Debugging Playbook: Mastering <code>TF_LOG</code> &amp; <code>terraform console</code></h1>
+<p>If you work with Terraform long enough, you will eventually hit a wall: <code>terraform apply</code> fails with a generic, unhelpful error message while your HCL code looks completely fine on the surface.</p>
+<p>To master Terraform troubleshooting, you must realize that Terraform operates on two entirely distinct layers:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a> ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> │ 1. The Logic Layer (HCL Language Engine)               │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> │    Functions, loops, data types, string interpolations │
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> │    TOOL: terraform console                             │
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a> └───────────────────────────┬────────────────────────────┘
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                             │
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                             ▼ Generates State Transitions
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a> ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a> │ 2. The Execution Layer (Provider HTTP/REST API Engine) │
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a> │    HTTP headers, TLS handshakes, JSON payloads, IAM    │
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a> │    TOOL: TF_LOG / TF_LOG_PROVIDER                      │
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a> └────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<p>When an apply fails, it is virtually always a failure in one of these two layers. Below is an architectural breakdown of both tools, followed by an end-to-end debugging runbook.</p>
+<hr />
+<h2 id="part-1-the-why">🧠 PART 1: The "Why"</h2>
+<h3 id="why-terraform-console-the-logic-layer">💻 Why <code>terraform console</code>? (The Logic Layer)</h3>
+<p>HCL is declarative, but modern modules feature complex function chains, conditional expressions, dynamic <code>for</code> loops, and nested object maps. Debugging syntax by repeatedly running <code>terraform plan</code> is slow and inefficient.</p>
+<p><code>terraform console</code> provides an interactive REPL (Read-Eval-Print Loop) environment for:</p>
+<ul>
+<li><strong>Rapid Function Prototyping:</strong> Test complex built-in functions (<code>cidrsubnet()</code>, <code>merge()</code>, <code>regex()</code>, <code>flatten()</code>) live without triggering deployment workflows.</li>
+<li><strong>State Inspection:</strong> Query resource addresses (<code>aws_vpc.main</code>) directly to view every attribute stored in the local or remote state file.</li>
+<li><strong>Variable &amp; Local Resolution:</strong> Evaluate <code>local.my_complex_map</code> or <code>var.subnet_cidrs</code> to inspect the exact resolved values before invoking API calls.</li>
+<li><strong>Syntax Troubleshooting:</strong> Isolate HCL syntax or type-casting issues without guessing.</li>
+</ul>
+<hr />
+<h3 id="why-tf_log-the-execution-layer">📡 Why <code>TF_LOG</code>? (The Execution Layer)</h3>
+<p>Standard terminal output is heavily filtered for readability. It confirms that a resource failed, but often obscures the underlying API error code.</p>
+<p>Enabling <code>TF_LOG</code> exposes the raw wire calls:</p>
+<ul>
+<li><strong>Exposing Cloud API Interactions:</strong> Inspect raw HTTP requests (<code>POST</code>, <code>PUT</code>, <code>DELETE</code>), custom headers, authentication tokens, and request/response JSON payloads.</li>
+<li><strong>Catching Silenced Errors:</strong> Cloud providers frequently return HTTP <code>403 Forbidden</code> (fine-grained IAM permission boundaries) or HTTP <code>429 Too Many Requests</code> (API throttling) that standard error parsers omit.</li>
+<li><strong>Graph &amp; Timing Race Conditions:</strong> View real-time Directed Acyclic Graph (DAG) node evaluations to identify concurrency locks or timing bugs.</li>
+<li><strong>Diagnosing Provider Plugin Bugs:</strong> Pinpoint whether an unexpected failure originates from Terraform Core or an upstream bug inside the provider plugin binary.</li>
+</ul>
+<hr />
+<h3 id="choosing-the-right-log-level">📌 Choosing the Right Log Level</h3>
+<p><code>TF_LOG</code> supports five standard severity levels:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Level</th>
+<th style="text-align: left;">Verbosity</th>
+<th style="text-align: left;">Primary Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>ERROR</code></strong></td>
+<td style="text-align: left;">Lowest</td>
+<td style="text-align: left;">Displays only fatal execution halts.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>WARN</code></strong></td>
+<td style="text-align: left;">Low</td>
+<td style="text-align: left;">Displays non-fatal warnings and deprecated schema arguments.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>INFO</code></strong></td>
+<td style="text-align: left;">Medium</td>
+<td style="text-align: left;">High-level execution summaries and state actions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>DEBUG</code></strong></td>
+<td style="text-align: left;">High</td>
+<td style="text-align: left;"><strong>Standard troubleshooting choice.</strong> Exposes HTTP endpoints, headers, and response payloads.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>TRACE</code></strong></td>
+<td style="text-align: left;">Extreme</td>
+<td style="text-align: left;">Comprehensive plugin internals, memory allocations, and RPC exchanges. Use for provider crashes.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="granular-logging-core-vs-provider">Granular Logging (Core vs. Provider)</h4>
+<p>Modern Terraform allows you to decouple log levels between the core binary and the provider plugins:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_CORE</span><span class="o">=</span>DEBUG
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PROVIDER</span><span class="o">=</span>TRACE
+</span></code></pre></div>
+<p>This isolates whether an issue stems from internal Terraform graph calculation (<code>TF_LOG_CORE</code>) or a specific cloud provider's API handler (<code>TF_LOG_PROVIDER</code>).</p>
+<hr />
+<h2 id="part-2-the-ultimate-debugging-runbook">🚀 PART 2: The Ultimate Debugging Runbook</h2>
+<hr />
+<h3 id="phase-1-triage-and-isolation">🔍 Phase 1: Triage and Isolation</h3>
+<p><strong>Objective:</strong> Determine whether the failure is a logic issue or an execution-level API error.</p>
+<h4 id="step-1-run-static-validation-first">Step 1: Run Static Validation First</h4>
+<p>Before executing network calls or evaluating state, run static validation:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>terraform<span class="w"> </span>validate
+</span></code></pre></div>
+<p><em>This parses syntax, verifies schema arguments, and checks variable types instantly without calling cloud APIs or locking remote state.</em></p>
+<h4 id="step-2-analyze-the-error-output">Step 2: Analyze the Error Output</h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a> ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a> │ Is it a syntax error, type mismatch, or invalid loop?  │──► Proceed to Phase 2
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a> └────────────────────────────────────────────────────────┘
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a> ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a> │ Is it a 4xx/5xx HTTP code, timeout, or provider crash? │──► Proceed to Phase 3 &amp; 4
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a> └────────────────────────────────────────────────────────┘
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a> ┌────────────────────────────────────────────────────────┐
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a> │ Is it an orphaned resource or state drift issue?       │──► Proceed to Phase 5
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a> └────────────────────────────────────────────────────────┘
+</span></code></pre></div>
+<hr />
+<h3 id="phase-2-debugging-logic-with-terraform-console">💻 Phase 2: Debugging Logic with <code>terraform console</code></h3>
+<p><strong>Objective:</strong> Fix HCL coding errors, list comprehensions, and data transformations.</p>
+<h4 id="step-1-initialize-working-directory">Step 1: Initialize Working Directory</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>terraform<span class="w"> </span>init
+</span></code></pre></div>
+<h4 id="step-2-launch-the-console-repl">Step 2: Launch the Console REPL</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>terraform<span class="w"> </span>console
+</span></code></pre></div>
+<blockquote>
+<p>[!WARNING]
+Launching the console acquires a read lock on your remote state backend. Ensure no active CI/CD pipelines are running <code>apply</code> concurrently to avoid state lock conflicts.</p>
+</blockquote>
+<h4 id="step-3-inspect-variables-and-live-state">Step 3: Inspect Variables and Live State</h4>
+<p>At the <code>&gt;</code> prompt, inspect expressions directly:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">&gt;</span><span class="w"> </span><span class="nv">var.environment</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="s2">"production"</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="err">&gt;</span><span class="w"> </span><span class="nv">local.common_tags</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">{</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="s2">"Environment"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"production"</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="s2">"ManagedBy"</span><span class="w">   </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform"</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="err">&gt;</span><span class="w"> </span><span class="nv">aws_vpc.main.cidr_block</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">"10.0.0.0/16"</span>
+</span></code></pre></div>
+<h4 id="step-4-test-built-in-functions">Step 4: Test Built-in Functions</h4>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="err">&gt;</span><span class="w"> </span><span class="nf">cidrsubnet</span><span class="p">(</span><span class="s2">"10.0.0.0/16"</span><span class="p">,</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">)</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="s2">"10.0.1.0/24"</span>
+</span></code></pre></div>
+<h4 id="step-5-test-complex-comprehensions-filters">Step 5: Test Complex Comprehensions &amp; Filters</h4>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="err">&gt;</span><span class="w"> </span><span class="p">[</span><span class="err">for</span><span class="w"> </span><span class="err">s</span><span class="w"> </span><span class="err">in</span><span class="w"> </span><span class="nv">var.subnets</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">s.id</span><span class="w"> </span><span class="err">if</span><span class="w"> </span><span class="nv">s.public</span><span class="w"> </span><span class="p">==</span><span class="w"> </span><span class="no">true</span><span class="p">]</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="p">[</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="s2">"subnet-01234567"</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="s2">"subnet-89abcdef"</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">]</span>
+</span></code></pre></div>
+<h4 id="step-6-exit-the-repl">Step 6: Exit the REPL</h4>
+<p>Type <code>exit</code> or press <code>Ctrl + C</code> to return to your shell, then update your <code>.tf</code> files with the validated logic.</p>
+<hr />
+<h3 id="phase-3-isolating-failing-resources-with-target">⚙️ Phase 3: Isolating Failing Resources with <code>-target</code></h3>
+<p><strong>Objective:</strong> Narrow the blast radius when debugging a single failing resource inside a large infrastructure stack.</p>
+<p>Instead of running a full apply that touches hundreds of resources, isolate the target:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-target<span class="o">=</span>aws_security_group.web_sg
+</span></code></pre></div>
+<blockquote>
+<p>[!CAUTION]
+Avoid <code>-target</code> in day-to-day CI/CD automation because it creates partial state. However, during active incident debugging, it significantly speeds up feedback loops and reduces log noise.</p>
+</blockquote>
+<hr />
+<h3 id="phase-4-debugging-execution-with-tf_log">📡 Phase 4: Debugging Execution with <code>TF_LOG</code></h3>
+<p><strong>Objective:</strong> Capture and analyze raw API communication between Terraform and the cloud control plane.</p>
+<h4 id="step-1-set-the-log-level">Step 1: Set the Log Level</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG</span><span class="o">=</span>DEBUG
+</span></code></pre></div>
+<p><em>(For provider crashes or panic traces, set <code>export TF_LOG_PROVIDER=TRACE</code>).</em></p>
+<h4 id="step-2-route-output-to-a-dedicated-log-file">Step 2: Route Output to a Dedicated Log File</h4>
+<p>Never let thousands of lines of raw JSON flood your terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">TF_LOG_PATH</span><span class="o">=</span><span class="s2">"terraform-debug.log"</span>
+</span></code></pre></div>
+<h4 id="step-3-reproduce-the-failure">Step 3: Reproduce the Failure</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>terraform<span class="w"> </span>apply<span class="w"> </span>-target<span class="o">=</span>aws_security_group.web_sg
+</span></code></pre></div>
+<h4 id="step-4-analyze-the-captured-logs">Step 4: Analyze the Captured Logs</h4>
+<p>Search the log file for HTTP status codes, headers, and response payloads:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Search for HTTP error codes</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">"HTTP/[0-9\.]+ (4[0-9]{2}|5[0-9]{2})"</span><span class="w"> </span>terraform-debug.log
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="c1"># Search for provider error blocks</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="s2">"\[ERROR\]"</span><span class="w"> </span>terraform-debug.log
+</span></code></pre></div>
+<p>Open the log in a pager (<code>less terraform-debug.log</code>) and search (<code>/</code>) for:
+* <code>[ERROR]</code> or <code>[WARN]</code>
+* Specific status codes: <code>400</code>, <code>403</code>, <code>409</code>, <code>429</code>, <code>500</code>
+* <code>response:</code> to inspect the raw JSON error string returned by the cloud provider.</p>
+<hr />
+<h3 id="phase-5-fixing-broken-state">🗄️ Phase 5: Fixing Broken State</h3>
+<p><strong>Objective:</strong> Reconcile state drift, remove orphaned entries, or import existing cloud resources.</p>
+<h4 id="list-all-tracked-resources">List All Tracked Resources</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>list
+</span></code></pre></div>
+<h4 id="inspect-state-attributes-of-a-specific-resource">Inspect State Attributes of a Specific Resource</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>show<span class="w"> </span>aws_instance.web_server
+</span></code></pre></div>
+<h4 id="remove-orphaned-resources-from-state">Remove Orphaned Resources from State</h4>
+<p>If a resource was deleted manually in the cloud console and Terraform state is failing:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>terraform<span class="w"> </span>state<span class="w"> </span>rm<span class="w"> </span>aws_instance.old_server
+</span></code></pre></div>
+<p><em>(Removes the resource from state tracking without attempting to delete it).</em></p>
+<h4 id="import-existing-infrastructure-into-state">Import Existing Infrastructure into State</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>terraform<span class="w"> </span>import<span class="w"> </span>aws_instance.web_server<span class="w"> </span>i-0abc123def456
+</span></code></pre></div>
+<hr />
+<h3 id="phase-6-post-debug-sanitization-cleanup">🧹 Phase 6: Post-Debug Sanitization &amp; Cleanup</h3>
+<p><strong>Objective:</strong> Secure and restore your terminal environment after resolving the failure.</p>
+<h4 id="step-1-unset-logging-variables">Step 1: Unset Logging Variables</h4>
+<p>If left enabled, future runs will run slower and generate massive log files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG_PATH
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG_CORE
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="nb">unset</span><span class="w"> </span>TF_LOG_PROVIDER
+</span></code></pre></div>
+<h4 id="step-2-securely-delete-the-debug-log-file">Step 2: Securely Delete the Debug Log File</h4>
+<blockquote>
+<p>[!WARNING]
+<strong>Critical Security Warning:</strong><br />
+<code>TF_LOG=DEBUG</code> captures raw HTTP request payloads, which may contain sensitive headers, auth tokens, plaintext passwords, or private keys. <strong>Never commit <code>terraform-debug.log</code> to version control.</strong></p>
+</blockquote>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>rm<span class="w"> </span>-f<span class="w"> </span>terraform-debug.log
+</span></code></pre></div>
+<h4 id="step-3-verify-with-clean-apply">Step 3: Verify with Clean Apply</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>terraform<span class="w"> </span>plan
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>terraform<span class="w"> </span>apply
+</span></code></pre></div>
+<hr />
+<h2 id="summary-reference">🎯 Summary Reference</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tool / Flag</th>
+<th style="text-align: left;">Target Layer</th>
+<th style="text-align: left;">Primary Operational Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong><code>terraform validate</code></strong></td>
+<td style="text-align: left;">Syntax</td>
+<td style="text-align: left;">Validates HCL configuration syntax and provider schema compliance statically.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>terraform console</code></strong></td>
+<td style="text-align: left;">Logic Layer</td>
+<td style="text-align: left;">Interactive REPL for testing functions, loops, variables, and inspecting state.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>-target=&lt;ADDR&gt;</code></strong></td>
+<td style="text-align: left;">Scope Isolation</td>
+<td style="text-align: left;">Restricts execution to a single resource and its dependencies during triage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>TF_LOG=DEBUG</code></strong></td>
+<td style="text-align: left;">Execution Layer</td>
+<td style="text-align: left;">Exposes raw cloud provider HTTP/REST API request and response payloads.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>TF_LOG_PROVIDER=TRACE</code></strong></td>
+<td style="text-align: left;">Plugin Layer</td>
+<td style="text-align: left;">Generates maximum verbosity for debugging provider-level crashes and RPC calls.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong><code>terraform state *</code></strong></td>
+<td style="text-align: left;">State Layer</td>
+<td style="text-align: left;">Inspects (<code>show</code>), prunes (<code>rm</code>), or adopts (<code>import</code>) resources in state.</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; Bruce Minanga
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

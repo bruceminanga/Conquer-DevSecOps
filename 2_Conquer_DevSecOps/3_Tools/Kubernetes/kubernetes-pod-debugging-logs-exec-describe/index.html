@@ -1,0 +1,770 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bruce Minanga">
+      
+      
+        <link rel="canonical" href="https://bruceminanga.github.io/Conquer-DevSecOps/2_Conquer_DevSecOps/3_Tools/Kubernetes/kubernetes-pod-debugging-logs-exec-describe/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>🚀 The "Holy Trinity" of Kubernetes Debugging: Describe, Logs, Exec - Conquer DevSecOps</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#the-holy-trinity-of-kubernetes-debugging-describe-logs-exec" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-header__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Conquer DevSecOps
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🚀 The "Holy Trinity" of Kubernetes Debugging: Describe, Logs, Exec
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-nav__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Conquer DevSecOps
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hiring_DevOps_Engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hiring in DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../1_DevOps_playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevSecOps playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔥 DevSecOps Articles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#and-why-your-manifest-is-the-final-boss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        (And Why Your Manifest is the Final Boss)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-kubectl-describe-the-orchestrators-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1️⃣ kubectl describe: The Orchestrator's Perspective
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1️⃣ kubectl describe: The Orchestrator&#39;s Perspective">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-namespace-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ The Namespace Trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bonus-when-the-pod-is-already-deleted" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🕒 Bonus: When the Pod is Already Deleted
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-kubectl-logs-the-applications-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2️⃣ kubectl logs: The Application's Perspective
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2️⃣ kubectl logs: The Application&#39;s Perspective">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pro-tip-fast-crashlooping-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💡 Pro-Tip: Fast CrashLooping Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-container-pods-sidecars-proxies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📦 Multi-Container Pods (Sidecars / Proxies)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-kubectl-exec-the-detectives-perspective" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3️⃣ kubectl exec: The Detective's Perspective
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3️⃣ kubectl exec: The Detective&#39;s Perspective">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-container-pods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Container Pods:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tying-it-all-together-the-manifest-is-the-real-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📜 Tying It All Together: The Manifest is the Real Fix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📜 Tying It All Together: The Manifest is the Real Fix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compare-desired-vs-actual-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔍 Compare Desired vs. Actual State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-decision-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📌 Debugging Decision Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="the-holy-trinity-of-kubernetes-debugging-describe-logs-exec">🚀 The "Holy Trinity" of Kubernetes Debugging: Describe, Logs, Exec</h1>
+<h3 id="and-why-your-manifest-is-the-final-boss"><em>(And Why Your Manifest is the Final Boss)</em></h3>
+<p>Let me paint a familiar picture: An alert goes off. A critical service in your Kubernetes cluster is down. You pull up your terminal, type <code>kubectl get pods</code>, and stare at the dreaded <code>CrashLoopBackOff</code> or <code>Pending</code> status.</p>
+<p>Kubernetes is incredible for scaling and orchestrating applications, but its layers of abstraction can sometimes feel like a black box. When things go wrong, you can't just SSH into a server and check a local file.</p>
+<p>To find the root cause, you need the <strong>"Holy Trinity" of Kubernetes debugging</strong>: <code>describe</code>, <code>logs</code>, and <code>exec</code>.</p>
+<p>Missing even one leaves a massive blind spot in your troubleshooting workflow. Here is the ultimate playbook for using them—and how they tie back to your ultimate source of truth: <strong>your Manifest</strong>.</p>
+<hr />
+<h2 id="1-kubectl-describe-the-orchestrators-perspective">1️⃣ <code>kubectl describe</code>: The Orchestrator's Perspective</h2>
+<p>Before your application code even runs, Kubernetes has to pull the image, allocate resources, and schedule the Pod. If the Pod fails to start, this is where you look first.</p>
+<ul>
+<li><strong>What it answers:</strong> <em>"What does Kubernetes think of my Pod?"</em></li>
+<li><strong>When to use it:</strong> When a pod is stuck in <code>Pending</code>, <code>ImagePullBackOff</code>, or is constantly being killed.</li>
+</ul>
+<blockquote>
+<p>💡 <strong>Pro-Tip:</strong> Scroll to the very bottom of the output to the <strong><code>Events</code></strong> section. This is the goldmine. It will tell you if your cluster is out of memory/CPU, if you have a typo in your image tag, or if a Liveness/Readiness probe is failing.</p>
+</blockquote>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span></code></pre></div>
+<h3 id="the-namespace-trap">⚠️ The Namespace Trap</h3>
+<p>If <code>kubectl get pods</code> returns nothing, you may simply be looking in the wrong namespace. A huge percentage of <em>"my pod isn't there"</em> confusion starts and ends here:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c1"># Or check across the entire cluster:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-A
+</span></code></pre></div>
+<h3 id="bonus-when-the-pod-is-already-deleted">🕒 Bonus: When the Pod is Already Deleted</h3>
+<p>If a pod terminated before you could run <code>describe</code>, grab the cluster-wide, time-sorted event stream:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>events<span class="w"> </span>--sort-by<span class="o">=</span>.lastTimestamp<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span></code></pre></div>
+<hr />
+<h2 id="2-kubectl-logs-the-applications-perspective">2️⃣ <code>kubectl logs</code>: The Application's Perspective</h2>
+<p>Once Kubernetes successfully starts the container, your application code takes the wheel. If the infrastructure is healthy but the app is throwing 500 errors, you need to hear what the application is outputting.</p>
+<ul>
+<li><strong>What it answers:</strong> <em>"What is my code complaining about?"</em></li>
+<li><strong>When to use it:</strong> When you suspect code-level exceptions, database timeouts, or runtime crashes.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span></code></pre></div>
+<h3 id="pro-tip-fast-crashlooping-containers">💡 Pro-Tip: Fast CrashLooping Containers</h3>
+<p>If your pod is crashing repeatedly in seconds, the current container might be dead before you can read the buffer. Use <code>--previous</code> to read the log buffer from the instance that just crashed:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>--previous<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span></code></pre></div>
+<h3 id="multi-container-pods-sidecars-proxies">📦 Multi-Container Pods (Sidecars / Proxies)</h3>
+<p>When running sidecars (Envoy, log shippers, vault agents, init containers), you must specify the container name:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>kubectl<span class="w"> </span>logs<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;
+</span></code></pre></div>
+<p><em>(Run <code>kubectl describe pod &lt;pod-name&gt;</code> first if you need to check container names).</em></p>
+<hr />
+<h2 id="3-kubectl-exec-the-detectives-perspective">3️⃣ <code>kubectl exec</code>: The Detective's Perspective</h2>
+<p>Sometimes Kubernetes says the Pod is healthy (<code>Running</code>), the logs look clean, but the app still fails. It's time to step inside the container itself. <code>exec</code> opens an interactive terminal inside the running container.</p>
+<ul>
+<li><strong>What it answers:</strong> <em>"What does the internal runtime environment actually look like?"</em></li>
+<li><strong>When to use it:</strong> To test internal network connectivity, confirm volume mounts, or check live environment variables.</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--<span class="w"> </span>/bin/sh
+</span></code></pre></div>
+<h3 id="multi-container-pods">Multi-Container Pods:</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>kubectl<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-it<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-c<span class="w"> </span>&lt;container-name&gt;<span class="w"> </span>-n<span class="w"> </span>&lt;namespace&gt;<span class="w"> </span>--<span class="w"> </span>/bin/sh
+</span></code></pre></div>
+<hr />
+<h2 id="tying-it-all-together-the-manifest-is-the-real-fix">📜 Tying It All Together: The Manifest is the Real Fix</h2>
+<p>Debugging is only half the battle. Once <code>describe</code>, <code>logs</code>, and <code>exec</code> point you to the root cause—<strong>what do you actually do with that information?</strong></p>
+<blockquote>
+<p>⚠️ <strong>You NEVER patch the live container directly.</strong></p>
+</blockquote>
+<p>Anything you edit inside a container via <code>exec</code> disappears the moment the Pod restarts. Container updates are not fixes—they are temporary diagnostics.</p>
+<p>Your <strong>Manifest</strong> (the declarative YAML defining your Deployment, ConfigMap, Secrets, etc.) is your source of truth. That is where the permanent fix lives:</p>
+<ul>
+<li><code>describe</code> revealed insufficient memory? ➔ Update <code>resources.requests</code> / <code>limits</code> in the manifest.</li>
+<li><code>logs</code> revealed an unhandled exception in code? ➔ Build/push a new image, update the <code>image:</code> tag in the manifest.</li>
+<li><code>exec</code> revealed a missing environment variable? ➔ Add it to the <code>env:</code> block in the manifest.</li>
+</ul>
+<h3 id="compare-desired-vs-actual-state">🔍 Compare Desired vs. Actual State</h3>
+<p>To inspect the live resolved state of your pod (including cluster defaults populated by Kubernetes):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>kubectl<span class="w"> </span>get<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-o<span class="w"> </span>yaml
+</span></code></pre></div>
+<p>Apply your permanent fix:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>manifest.yaml
+</span></code></pre></div>
+<p>Kubernetes reads the new desired state and rolls out the fix cleanly via your deployment controller.</p>
+<hr />
+<h2 id="debugging-decision-matrix">📌 Debugging Decision Matrix</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Symptom</th>
+<th style="text-align: left;">Primary Tool</th>
+<th style="text-align: left;">Command / Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Pod won't start (<code>Pending</code> / <code>ImagePullBackOff</code>)</strong></td>
+<td style="text-align: left;"><code>describe</code></td>
+<td style="text-align: left;"><code>kubectl describe pod &lt;name&gt;</code> (Check <code>Events:</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pod missing entirely</strong></td>
+<td style="text-align: left;">Namespace Check</td>
+<td style="text-align: left;"><code>kubectl get pods -A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pod was evicted/deleted before inspection</strong></td>
+<td style="text-align: left;">Event Stream</td>
+<td style="text-align: left;"><code>kubectl get events --sort-by=.lastTimestamp</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pod restarts repeatedly (<code>CrashLoopBackOff</code>)</strong></td>
+<td style="text-align: left;"><code>logs --previous</code></td>
+<td style="text-align: left;"><code>kubectl logs &lt;name&gt; --previous</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Pod running, but app returning errors</strong></td>
+<td style="text-align: left;"><code>logs</code></td>
+<td style="text-align: left;"><code>kubectl logs &lt;name&gt; -f</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Multiple containers in one pod</strong></td>
+<td style="text-align: left;">Flag <code>-c</code></td>
+<td style="text-align: left;"><code>kubectl logs &lt;name&gt; -c &lt;container-name&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Network/ConfigMap sanity check</strong></td>
+<td style="text-align: left;"><code>exec</code></td>
+<td style="text-align: left;"><code>kubectl exec -it &lt;name&gt; -- /bin/sh</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Permanent Remediation</strong></td>
+<td style="text-align: left;"><strong>Git / Manifest</strong></td>
+<td style="text-align: left;">Update YAML manifest ➔ <code>kubectl apply -f</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; Bruce Minanga
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

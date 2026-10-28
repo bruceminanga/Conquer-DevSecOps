@@ -1,0 +1,783 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bruce Minanga">
+      
+      
+        <link rel="canonical" href="https://bruceminanga.github.io/Conquer-DevSecOps/2_Conquer_DevSecOps/3_Tools/Kubernetes/kubernetes-learning-path-beginner-to-pro/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>☸️ Kubernetes Learning Path: Beginner to Pro - Conquer DevSecOps</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kubernetes-learning-path-beginner-to-pro" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-header__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Conquer DevSecOps
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ☸️ Kubernetes Learning Path: Beginner to Pro
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-nav__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Conquer DevSecOps
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hiring_DevOps_Engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hiring in DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../1_DevOps_playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevSecOps playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔥 DevSecOps Articles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#level-0-foundations-linux-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 0 — Foundations: Linux &amp; Networking
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Level 0 — Foundations: Linux &amp; Networking">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#linux-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🐧 Linux Foundations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-kubernetes-networking-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌐 The Kubernetes Networking Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-1-primitives-core-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 1 — Primitives &amp; Core Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-2-workloads-storage-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 2 — Workloads, Storage &amp; Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-3-cluster-operations-traffic-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 3 — Cluster Operations &amp; Traffic Management
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-4-production-readiness-security-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 4 — Production Readiness, Security &amp; Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#level-5-platform-engineering-extensibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Level 5 — Platform Engineering &amp; Extensibility
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deep-dives-practical-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Deep Dives &amp; Practical Notes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="kubernetes-learning-path-beginner-to-pro">☸️ Kubernetes Learning Path: Beginner to Pro</h1>
+<p>Welcome to the complete Kubernetes curriculum. This roadmap covers everything from low-level Linux/Networking primitives up to production platform engineering.</p>
+<blockquote>
+<p>💡 <strong>Tip:</strong> Treat each level as a discrete milestone. Master the core primitives before moving on to advanced operational tooling.</p>
+</blockquote>
+<hr />
+<h2 id="level-0-foundations-linux-networking">Level 0 — Foundations: Linux &amp; Networking</h2>
+<p>Before touching a cluster, you must understand the operating system primitives and network models that Kubernetes automates.</p>
+<h3 id="linux-foundations">🐧 Linux Foundations</h3>
+<ul>
+<li>Process isolation: Linux Namespaces (<code>pid</code>, <code>net</code>, <code>mnt</code>, <code>ipc</code>, <code>uts</code>, <code>user</code>)</li>
+<li>Resource constraints: Control Groups (<code>cgroups v1 / v2</code>)</li>
+<li>System utilities: <code>systemd</code>, <code>journalctl</code>, and storage mounts</li>
+</ul>
+<h3 id="the-kubernetes-networking-model">🌐 The Kubernetes Networking Model</h3>
+<p>Kubernetes enforces 4 fundamental networking rules:
+1. Every Pod gets its own unique IP address (containers within the same Pod share this IP).
+2. All Pods can communicate with all other Pods across nodes without NAT.
+3. All Nodes can communicate with all Pods without NAT.
+4. The IP a Pod sees as its own is the same IP every other Pod and Node sees.</p>
+<ul>
+<li><strong>Core Networking Primitives:</strong> IPs, Subnets, CIDR blocks, DNS, and <code>iptables</code>/<code>IPVS</code>.</li>
+<li><strong>Container Network Interface (CNI):</strong> Overlay (Flannel, Calico VXLAN) vs. Flat/Routed (AWS VPC CNI, Calico BGP).</li>
+<li><strong>Service Abstraction:</strong> ClusterIP (internal VIP), NodePort, and LoadBalancer.</li>
+<li><strong>Cluster DNS:</strong> How CoreDNS resolves <code>&lt;service&gt;.&lt;namespace&gt;.svc.cluster.local</code>.</li>
+<li><strong>Traffic Control:</strong> Ingress Controllers, Gateway API, and Network Policies.</li>
+<li><strong>Data Plane Acceleration:</strong> How <code>kube-proxy</code> programs <code>iptables</code>/<code>IPVS</code>, and how eBPF (Cilium) replaces it.</li>
+</ul>
+<hr />
+<h2 id="level-1-primitives-core-architecture">Level 1 — Primitives &amp; Core Architecture</h2>
+<p><strong>Goal:</strong> Understand how Kubernetes works under the hood and interact with basic declarative objects.</p>
+<ul>
+<li><strong>Architecture Deep Dives:</strong></li>
+<li><a href="../kubernetes-architecture/">Understand the Architecture: Control Plane, Worker Nodes &amp; Internals</a></li>
+<li><a href="../kubernetes-complex-system-illusion/">Complex Systems Are an Illusion: Breaking Down the Components</a></li>
+<li>Abstraction Layers: How Pods wrap Containers, and Deployments wrap ReplicaSets</li>
+<li>Writing Clean YAML: Structuring declarative manifests</li>
+</ul>
+<!-- -->
+
+<ol>
+<li>
+<p><a href="../kubernetes-standalone-pod/">Understand what a Pod is and deploy one</a> (Pod → Container)</p>
+</li>
+<li>
+<p><a href="../kubernetes-deployment-lifecycle/">Understand what a Deployment is and create one</a> (Deployment → ReplicaSet → Pod → Container)</p>
+</li>
+<li>
+<p><a href="../kubernetes-imperative-vs-declarative-management/">Master imperative vs declarative management</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-labels-selectors-deployments-pods-services/">Understand Labels and Selectors</a> — how Deployments, Pods and Services connect</p>
+</li>
+<li>
+<p><a href="../kubernetes-deployment-scaling/">Scale a Deployment up and down</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-services-expose-deployment/">Understand what a Service is and expose a Deployment</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-service-types-clusterip-nodeport-loadbalancer/">Understand ClusterIP, NodePort and LoadBalancer</a></p>
+</li>
+<li>
+<p><a href="../kubectl-port-forward-local-testing-debugging/">Use kubectl port-forward for local testing and debugging</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-pod-debugging-logs-exec-describe/">Inspect and debug a running Pod — logs, exec, describe</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-self-healing-delete-recreate-resources/">Delete and recreate resources — observe self-healing</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-namespaces-create-manage/">Understand Kubernetes Namespaces and create your own</a></p>
+</li>
+</ol>
+<hr />
+<h2 id="level-2-workloads-storage-configuration">Level 2 — Workloads, Storage &amp; Configuration</h2>
+<p><strong>Goal:</strong> Deploy, configure, and manage real-world, multi-tier applications reliably.</p>
+<ol>
+<li>
+<p><a href="../kubernetes-deploy-real-application/">Deploy a real application on Kubernetes</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-configmaps-application-configuration/">Use ConfigMaps to manage application configuration</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-secrets-sensitive-data/">Use Secrets to manage sensitive data</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-persistent-volumes-persistent-volume-claims/">Attach persistent storage with PersistentVolumes and PersistentVolumeClaims</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-storageclasses-csi-dynamic-provisioning/">Understand StorageClasses and the Container Storage Interface for dynamic provisioning</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-resource-requests-limits/">Set resource requests and limits</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-liveness-readiness-probes/">Configure liveness and readiness probes</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-startup-probes/">Configure Startup probes for slow-starting applications</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-multi-container-pod-sidecar-pattern/">Use a multi-container Pod — sidecar pattern</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-multi-tier-app-frontend-backend-database/">Deploy a multi-tier app — frontend + backend + database</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-jobs-cronjobs/">Run batch workloads using Jobs and CronJobs</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-graceful-shutdown-sigterm-prestop/">Understand graceful shutdown — SIGTERM and preStop hooks for zero-downtime deployments</a></p>
+</li>
+</ol>
+<hr />
+<h2 id="level-3-cluster-operations-traffic-management">Level 3 — Cluster Operations &amp; Traffic Management</h2>
+<p><strong>Goal:</strong> Manage traffic ingress, scale dynamically, and secure internal cluster communications.</p>
+<ol>
+<li>
+<p><a href="../kubernetes-install-use-helm/">Install and use Helm to deploy applications</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-write-helm-chart/">Write your own Helm chart</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-ingress-multiple-services/">Set up Ingress and route traffic to multiple services</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-cert-manager-lets-encrypt-tls/">Set up Cert-Manager for automatic TLS certificates via Let's Encrypt</a> — for production, not locally</p>
+</li>
+<li>
+<p><a href="../kubernetes-gateway-api/">Learn the Gateway API — the modern successor to Ingress</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-horizontal-pod-autoscaler/">Configure Horizontal Pod Autoscaler</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-vertical-pod-autoscaler-keda/">Explore Vertical Pod Autoscaler and KEDA for event-driven autoscaling</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-rbac-roles-bindings-serviceaccounts/">Understand and apply RBAC — Roles, RoleBindings, ClusterRoles, ServiceAccounts</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-network-policies/">Apply Network Policies to restrict pod-to-pod traffic</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-init-containers/">Understand and use Init Containers</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-daemonsets-statefulsets/">Understand DaemonSets and StatefulSets</a></p>
+</li>
+<li>
+<p><a href="../kubernetes-advanced-scheduling-taints-tolerations-affinity/">Master advanced scheduling — Taints &amp; Tolerations, Node Selectors, Node Affinity/Anti-affinity</a></p>
+</li>
+</ol>
+<hr />
+<h2 id="level-4-production-readiness-security-observability">Level 4 — Production Readiness, Security &amp; Observability</h2>
+<p><strong>Goal:</strong> Harden, observe, and secure a Kubernetes environment to enterprise production standards.</p>
+<ul>
+<li>Cluster metrics collection: Prometheus operator, node-exporter, and Grafana dashboards</li>
+<li>Centralized logging: Shipping and querying container logs with Loki or the EFK/Elastic stack</li>
+<li>Distributed tracing: Tracing microservice latency with OpenTelemetry and Jaeger</li>
+<li>GitOps delivery: Automating cluster sync with <strong>ArgoCD</strong> or <strong>Flux</strong></li>
+<li>Enterprise secrets management: <strong>External Secrets Operator (ESO)</strong> with HashiCorp Vault or AWS Secrets Manager</li>
+<li>Supply-chain security: Automated image vulnerability scanning with <strong>Trivy</strong> in CI pipelines</li>
+<li>Cluster policy enforcement and governance using <strong>Kyverno</strong> or <strong>OPA Gatekeeper</strong></li>
+<li>Pod hardening: Enforcing <strong>Pod Security Admission (PSA)</strong> (restricted profile, non-root, read-only root filesystems)</li>
+<li>Disaster recovery: Backing up and restoring etcd/cluster state with <strong>Velero</strong></li>
+<li>Cloud spend visibility: Tracking compute and storage costs with <strong>Kubecost</strong> or <strong>OpenCost</strong></li>
+</ul>
+<hr />
+<h2 id="level-5-platform-engineering-extensibility">Level 5 — Platform Engineering &amp; Extensibility</h2>
+<p><strong>Goal:</strong> Build, automate, and operate an extensible, multi-tenant developer platform on top of Kubernetes.</p>
+<ul>
+<li>Build multi-tenant environments using dedicated tenant namespaces, <strong>ResourceQuotas</strong>, and <strong>LimitRanges</strong></li>
+<li>Template and patch multi-environment configurations (dev/staging/prod) with <strong>Kustomize</strong></li>
+<li>High-density database management on Kubernetes (e.g., CloudNativePG, Zalando Postgres Operator)</li>
+<li>Resilience testing: Implement Chaos Engineering (LitmusChaos or Chaos Mesh)</li>
+<li>Dynamic cluster scaling: Compare traditional <strong>Cluster Autoscaler</strong> with just-in-time provisioning via <strong>Karpenter</strong></li>
+<li>High availability: Balance pods across availability zones using <strong>Topology Spread Constraints</strong></li>
+<li>Zero-downtime cluster upgrades: Node draining, cordoning, and <strong>PodDisruptionBudgets (PDB)</strong></li>
+<li>Kubernetes extension: Building Custom Resource Definitions (<strong>CRDs</strong>) and custom <strong>Operators</strong> (Kubebuilder / Operator SDK)</li>
+<li>Enterprise Service Mesh: Implement <strong>Istio</strong>, <strong>Linkerd</strong>, or <strong>Cilium Service Mesh</strong> for cluster-wide mTLS</li>
+<li>Internal Developer Platforms (IDP): Expose self-service cloud infrastructure using <strong>Backstage</strong> and <strong>Crossplane</strong></li>
+</ul>
+<hr />
+<h2 id="deep-dives-practical-notes">📚 Deep Dives &amp; Practical Notes</h2>
+<ul>
+<li><a href="../kubernetes-architecture/">Kubernetes Architecture &amp; Core Daemons</a></li>
+<li><a href="../kubernetes-complex-system-illusion/">Mental Models: Deconstructing Complex Systems</a></li>
+<li><strong>The "Running" Status Trap:</strong> Why a <code>STATUS: Running</code> pod can still fail health probes and black-hole traffic</li>
+<li><strong>The Production Gap:</strong> Key architectural differences between local dev clusters (Minikube/Kind) and multi-region production clusters</li>
+<li><strong>Hands-on Labs:</strong> Interactive cluster debugging scenarios on <a href="https://killercoda.com">Killercoda</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; Bruce Minanga
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

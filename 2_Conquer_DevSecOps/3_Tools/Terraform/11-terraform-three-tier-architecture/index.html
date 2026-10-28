@@ -1,0 +1,1244 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bruce Minanga">
+      
+      
+        <link rel="canonical" href="https://bruceminanga.github.io/Conquer-DevSecOps/2_Conquer_DevSecOps/3_Tools/Terraform/11-terraform-three-tier-architecture/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>🏛️ Architecting Resilience: A Production 3-Tier AWS Runbook - Conquer DevSecOps</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#architecting-resilience-a-production-3-tier-aws-runbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-header__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Conquer DevSecOps
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🏛️ Architecting Resilience: A Production 3-Tier AWS Runbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-nav__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Conquer DevSecOps
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hiring_DevOps_Engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hiring in DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../1_DevOps_playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevSecOps playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔥 DevSecOps Articles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-why-3-tier-still-wins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧭 Part 1: Why 3-Tier Still Wins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🧭 Part 1: Why 3-Tier Still Wins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-network-isolation-and-defense-in-depth" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Network Isolation and Defense-in-Depth
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-independent-scalability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Independent Scalability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-decoupled-failure-domains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Decoupled Failure Domains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-managed-persistence-engine-amazon-rds-aurora" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Managed Persistence Engine (Amazon RDS / Aurora)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-audit-compliance-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Audit &amp; Compliance Readiness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-the-deployment-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Part 2: The Deployment Runbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Part 2: The Deployment Runbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-network-topology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 1: Network Topology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-chained-security-group-perimeter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 2: Chained Security Group Perimeter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-the-persistence-tier-multi-az-rds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 3: The Persistence Tier (Multi-AZ RDS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-the-application-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 4: The Application Tier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Phase 4: The Application Tier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-iam-instance-profile-zero-bastions-zero-ssh-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 IAM Instance Profile (Zero Bastions, Zero SSH Keys)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-application-user-data-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Application User Data Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-ec2-launch-template-imdsv2-enforced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 EC2 Launch Template (IMDSv2 Enforced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-5-the-web-tier-alb-waf-asg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 5: The Web Tier (ALB + WAF + ASG)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Phase 5: The Web Tier (ALB + WAF + ASG)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-target-group-application-load-balancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Target Group &amp; Application Load Balancer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-listeners-https-with-modern-tls-policy-http-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Listeners (HTTPS with Modern TLS Policy &amp; HTTP Redirect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-aws-waf-regional-web-acl-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 AWS WAF Regional Web ACL Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-auto-scaling-group-target-tracking-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Auto Scaling Group &amp; Target Tracking Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-production-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 6: Production Verification
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Phase 6: Production Verification">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ingress-verification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Ingress Verification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-perimeter-isolation-audit-run-from-external-internet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Perimeter Isolation Audit (Run from External Internet)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-app-to-database-connection-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. App-to-Database Connection Audit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-7-day-2-operations-incident-triage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 7: Day-2 Operations &amp; Incident Triage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="📍 Phase 7: Day-2 Operations &amp; Incident Triage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#database-failover-chaos-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Failover Chaos Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-downtime-rolling-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Downtime Rolling Release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-8-observability-audit-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📍 Phase 8: Observability &amp; Audit Baseline
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="architecting-resilience-a-production-3-tier-aws-runbook">🏛️ Architecting Resilience: A Production 3-Tier AWS Runbook</h1>
+<p><em>Why the classic Web-App-Database pattern remains the enterprise gold standard, and an end-to-end deployment runbook you can actually execute.</em></p>
+<hr />
+<p>Microservices, serverless, and edge runtimes dominate architecture discussions. But when external compliance auditors arrive for <strong>SOC 2 Type II</strong>, <strong>HIPAA</strong>, or <strong>PCI-DSS</strong>, or when sudden production traffic surges 100x, the architectural design that holds the line predictably without ballooning budgets is still the classic <strong>3-Tier Architecture</strong>.</p>
+<p>Below is an engineering analysis of why this model excels, followed by an end-to-end, CLI-driven AWS deployment runbook.</p>
+<hr />
+<h2 id="part-1-why-3-tier-still-wins">🧭 Part 1: Why 3-Tier Still Wins</h2>
+<p>A 3-tier architecture physically segregates the stack into three network planes:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>               [ Internet ]
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                    │
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                    ▼
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>┌───────────────────────────────────────┐
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│ 1. Web Tier: ALB + AWS WAF            │  Public Subnets
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>└───────────────────┬───────────────────┘
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                    │
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                    ▼
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>┌───────────────────────────────────────┐
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│ 2. App Tier: Auto Scaling Group (ASG) │  Private Subnets
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└───────────────────┬───────────────────┘
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                    │
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                    ▼
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>┌───────────────────────────────────────┐
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│ 3. Data Tier: Multi-AZ RDS Engine     │  Isolated Subnets
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>└───────────────────────────────────────┘
+</span></code></pre></div>
+<hr />
+<h3 id="1-network-isolation-and-defense-in-depth">1. Network Isolation and Defense-in-Depth</h3>
+<p>In a flat network topology, a Remote Code Execution (RCE) vulnerability in an exposed web server places the attacker directly adjacent to your database layer. The 3-tier model mitigates this blast radius:</p>
+<ul>
+<li><strong>Web Tier:</strong> The sole public ingress point. Terminates TLS, filters malicious payloads via AWS WAF, and forwards requests internally.</li>
+<li><strong>App Tier:</strong> Deployed in private subnets with no public IP routes. Accepts traffic strictly from the Application Load Balancer's security group.</li>
+<li><strong>Database Tier:</strong> Deployed in isolated subnets with no route to an Internet Gateway or NAT Gateway. Listens on PostgreSQL port <code>5432</code> strictly for connections initiated by the application tier's security group.</li>
+</ul>
+<blockquote>
+<p>Compromising the front door does not yield direct access to the persistent data plane.</p>
+</blockquote>
+<hr />
+<h3 id="2-independent-scalability">2. Independent Scalability</h3>
+<p>Each layer encounters fundamentally distinct performance bottlenecks:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tier</th>
+<th style="text-align: left;">Primary Bottlenecks</th>
+<th style="text-align: left;">Scaling Strategy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Web Tier</strong></td>
+<td style="text-align: left;">Concurrent TCP connections, TLS handshakes, network I/O</td>
+<td style="text-align: left;">Managed automatically by ALB elasticity</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>App Tier</strong></td>
+<td style="text-align: left;">CPU utilization, thread contention, application heap memory</td>
+<td style="text-align: left;">Horizontal Auto Scaling (EC2 / ASG)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Data Tier</strong></td>
+<td style="text-align: left;">Disk I/O (IOPS), buffer cache, connection pools</td>
+<td style="text-align: left;">Vertical scaling, storage autoscaling, and Read Replicas</td>
+</tr>
+</tbody>
+</table>
+<p>This decoupling prevents over-provisioning an entire server fleet to resolve a bottleneck in a single subsystem.</p>
+<hr />
+<h3 id="3-decoupled-failure-domains">3. Decoupled Failure Domains</h3>
+<ul>
+<li>A memory leak in application code cannot exhaust host RAM on the database node or trigger the Linux Out-Of-Memory (OOM) killer on the persistence engine.</li>
+<li>Application deployments and blue/green rollouts execute independently without altering persistent database state.</li>
+<li>Frontend, backend, and platform/DBA teams maintain clear boundaries of operational ownership.</li>
+</ul>
+<hr />
+<h3 id="4-managed-persistence-engine-amazon-rds-aurora">4. Managed Persistence Engine (Amazon RDS / Aurora)</h3>
+<p>Deploying a managed database tier provides enterprise guarantees:</p>
+<ul>
+<li><strong>Synchronous Multi-AZ Standby:</strong> Automated failover completes in 60 to 120 seconds with zero manual DNS intervention.</li>
+<li><strong>Continuous Backups:</strong> Automated transaction log replication enables point-in-time recovery (PITR).</li>
+<li><strong>Automated Maintenance:</strong> OS patching occurs within managed maintenance windows.</li>
+<li><strong>Storage Autoscaling:</strong> Elastic disk allocation prevents outages caused by full storage volumes.</li>
+</ul>
+<hr />
+<h3 id="5-audit-compliance-readiness">5. Audit &amp; Compliance Readiness</h3>
+<p>Security frameworks (PCI-DSS Req 1.3, HIPAA, SOC 2) mandate that sensitive and regulated data cannot reside on hosts directly reachable from the public internet. Physical subnet segmentation paired with security-group chaining provides clear technical proof for audit controls.</p>
+<hr />
+<h2 id="part-2-the-deployment-runbook">🛠️ Part 2: The Deployment Runbook</h2>
+<ul>
+<li><strong>Reference Target:</strong> AWS CLI v2, Region <code>us-east-1</code>.</li>
+<li><strong>Execution Strategy:</strong> Execute phases sequentially within a single terminal session to preserve exported environment variables.</li>
+</ul>
+<blockquote>
+<p>[!WARNING]
+<strong>Cost Warning:</strong> High-availability multi-AZ architectures with redundant NAT Gateways and Multi-AZ RDS incur hourly costs. Tear down sandbox environments promptly after testing.</p>
+</blockquote>
+<hr />
+<h3 id="phase-1-network-topology">📍 Phase 1: Network Topology</h3>
+<p>Deploy across two Availability Zones (<code>us-east-1a</code>, <code>us-east-1b</code>) spanning six subnets:</p>
+<ul>
+<li><strong>VPC CIDR:</strong> <code>10.0.0.0/16</code></li>
+<li><strong>Web Tier (Public):</strong> <code>10.0.1.0/24</code> (AZ-1), <code>10.0.2.0/24</code> (AZ-2) $\rightarrow$ Default route to Internet Gateway.</li>
+<li><strong>App Tier (Private):</strong> <code>10.0.10.0/24</code> (AZ-1), <code>10.0.11.0/24</code> (AZ-2) $\rightarrow$ Egress route to AZ-local NAT Gateway.</li>
+<li><strong>Database Tier (Isolated):</strong> <code>10.0.20.0/24</code> (AZ-1), <code>10.0.21.0/24</code> (AZ-2) $\rightarrow$ Local VPC route only (<code>10.0.0.0/16</code>).</li>
+</ul>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># 1. Base VPC &amp; Internet Gateway</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nv">VPC_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-vpc<span class="w"> </span>--cidr-block<span class="w"> </span><span class="m">10</span>.0.0.0/16<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">'ResourceType=vpc,Tags=[{Key=Name,Value=prod-3tier-vpc}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'Vpc.VpcId'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--enable-dns-hostnames<span class="w"> </span><span class="s1">'{"Value":true}'</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-vpc-attribute<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--enable-dns-support<span class="w"> </span><span class="s1">'{"Value":true}'</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="nv">IGW_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-internet-gateway<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">'ResourceType=internet-gateway,Tags=[{Key=Name,Value=prod-3tier-igw}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'InternetGateway.InternetGatewayId'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>attach-internet-gateway<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--internet-gateway-id<span class="w"> </span><span class="nv">$IGW_ID</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="c1"># 2. Subnet Helper Function &amp; Allocation</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>mk_subnet<span class="o">()</span><span class="w"> </span><span class="o">{</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">  </span>aws<span class="w"> </span>ec2<span class="w"> </span>create-subnet<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--cidr-block<span class="w"> </span><span class="nv">$1</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span>--availability-zone<span class="w"> </span><span class="nv">$2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span>--tag-specifications<span class="w"> </span><span class="s2">"ResourceType=subnet,Tags=[{Key=Name,Value=</span><span class="nv">$3</span><span class="s2">}]"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span>--query<span class="w"> </span><span class="s1">'Subnet.SubnetId'</span><span class="w"> </span>--output<span class="w"> </span>text
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="o">}</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="nv">SUBNET_WEB_AZ1</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w"> </span><span class="m">10</span>.0.1.0/24<span class="w">  </span>us-east-1a<span class="w"> </span>subnet-web-az1<span class="k">)</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nv">SUBNET_WEB_AZ2</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w"> </span><span class="m">10</span>.0.2.0/24<span class="w">  </span>us-east-1b<span class="w"> </span>subnet-web-az2<span class="k">)</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="nv">SUBNET_APP_AZ1</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w"> </span><span class="m">10</span>.0.10.0/24<span class="w"> </span>us-east-1a<span class="w"> </span>subnet-app-az1<span class="k">)</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nv">SUBNET_APP_AZ2</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w"> </span><span class="m">10</span>.0.11.0/24<span class="w"> </span>us-east-1b<span class="w"> </span>subnet-app-az2<span class="k">)</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="nv">SUBNET_DB_AZ1</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w">  </span><span class="m">10</span>.0.20.0/24<span class="w"> </span>us-east-1a<span class="w"> </span>subnet-db-az1<span class="k">)</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="nv">SUBNET_DB_AZ2</span><span class="o">=</span><span class="k">$(</span>mk_subnet<span class="w">  </span><span class="m">10</span>.0.21.0/24<span class="w"> </span>us-east-1b<span class="w"> </span>subnet-db-az2<span class="k">)</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="c1"># Enable Public IP Assignment for Web Subnets</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-subnet-attribute<span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ1</span><span class="w"> </span>--map-public-ip-on-launch
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>aws<span class="w"> </span>ec2<span class="w"> </span>modify-subnet-attribute<span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ2</span><span class="w"> </span>--map-public-ip-on-launch
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="c1"># 3. High-Availability NAT Gateways (One per AZ)</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="nv">EIP1</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc<span class="w"> </span>--query<span class="w"> </span>AllocationId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="nv">EIP2</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>allocate-address<span class="w"> </span>--domain<span class="w"> </span>vpc<span class="w"> </span>--query<span class="w"> </span>AllocationId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="nv">NAT1</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-nat-gateway<span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ1</span><span class="w"> </span>--allocation-id<span class="w"> </span><span class="nv">$EIP1</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">'ResourceType=natgateway,Tags=[{Key=Name,Value=nat-az1}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">  </span>--query<span class="w"> </span>NatGateway.NatGatewayId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="nv">NAT2</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-nat-gateway<span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ2</span><span class="w"> </span>--allocation-id<span class="w"> </span><span class="nv">$EIP2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">  </span>--tag-specifications<span class="w"> </span><span class="s1">'ResourceType=natgateway,Tags=[{Key=Name,Value=nat-az2}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">  </span>--query<span class="w"> </span>NatGateway.NatGatewayId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>aws<span class="w"> </span>ec2<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>nat-gateway-available<span class="w"> </span>--nat-gateway-ids<span class="w"> </span><span class="nv">$NAT1</span><span class="w"> </span><span class="nv">$NAT2</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="c1"># 4. Routing Architecture</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c1"># Public Tier (To IGW)</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="nv">RT_PUB</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-route-table<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>RouteTable.RouteTableId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_PUB</span><span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--gateway-id<span class="w"> </span><span class="nv">$IGW_ID</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_PUB</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ1</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_PUB</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ2</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="c1"># App Tier AZ-1 (To NAT1)</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="nv">RT_APP1</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-route-table<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>RouteTable.RouteTableId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_APP1</span><span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--nat-gateway-id<span class="w"> </span><span class="nv">$NAT1</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_APP1</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_APP_AZ1</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="c1"># App Tier AZ-2 (To NAT2)</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="nv">RT_APP2</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-route-table<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>RouteTable.RouteTableId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-route<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_APP2</span><span class="w"> </span>--destination-cidr-block<span class="w"> </span><span class="m">0</span>.0.0.0/0<span class="w"> </span>--nat-gateway-id<span class="w"> </span><span class="nv">$NAT2</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_APP2</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_APP_AZ2</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="c1"># Isolated DB Tier (Local Route Only)</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="nv">RT_DB</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-route-table<span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>RouteTable.RouteTableId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_DB</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_DB_AZ1</span>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>aws<span class="w"> </span>ec2<span class="w"> </span>associate-route-table<span class="w"> </span>--route-table-id<span class="w"> </span><span class="nv">$RT_DB</span><span class="w"> </span>--subnet-id<span class="w"> </span><span class="nv">$SUBNET_DB_AZ2</span>
+</span></code></pre></div>
+<hr />
+<h3 id="phase-2-chained-security-group-perimeter">📍 Phase 2: Chained Security Group Perimeter</h3>
+<p>Chain security groups by ID to maintain dynamic trust boundaries across scaling events:</p>
+<p>$$\text{Internet} \xrightarrow[\text{Port 80/443}]{} \mathbf{\text{ALB_SG}} \xrightarrow[\text{Port 8080}]{} \mathbf{\text{APP_SG}} \xrightarrow[\text{Port 5432}]{} \mathbf{\text{DB_SG}}$$</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># 1. Create Security Groups</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nv">ALB_SG</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span>--group-name<span class="w"> </span>prod-alb-sg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">"Public ingress for ALB"</span><span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>GroupId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nv">APP_SG</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span>--group-name<span class="w"> </span>prod-app-sg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">"Ingress from ALB only"</span><span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>GroupId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nv">DB_SG</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>ec2<span class="w"> </span>create-security-group<span class="w"> </span>--group-name<span class="w"> </span>prod-db-sg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span>--description<span class="w"> </span><span class="s2">"Ingress from app tier only"</span><span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--query<span class="w"> </span>GroupId<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># 2. Ingress Chaining</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$ALB_SG</span><span class="w"> </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">80</span><span class="w">  </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$ALB_SG</span><span class="w"> </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">443</span><span class="w"> </span>--cidr<span class="w"> </span><span class="m">0</span>.0.0.0/0
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$APP_SG</span><span class="w"> </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--source-group<span class="w"> </span><span class="nv">$ALB_SG</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>aws<span class="w"> </span>ec2<span class="w"> </span>authorize-security-group-ingress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$DB_SG</span><span class="w">  </span>--protocol<span class="w"> </span>tcp<span class="w"> </span>--port<span class="w"> </span><span class="m">5432</span><span class="w"> </span>--source-group<span class="w"> </span><span class="nv">$APP_SG</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="c1"># 3. Egress Hardening (DB Never Initiates Outbound Connections)</span>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>aws<span class="w"> </span>ec2<span class="w"> </span>revoke-security-group-egress<span class="w"> </span>--group-id<span class="w"> </span><span class="nv">$DB_SG</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">  </span>--ip-permissions<span class="w"> </span><span class="s1">'IpProtocol=-1,IpRanges=[{CidrIp=0.0.0.0/0}]'</span>
+</span></code></pre></div>
+<hr />
+<h3 id="phase-3-the-persistence-tier-multi-az-rds">📍 Phase 3: The Persistence Tier (Multi-AZ RDS)</h3>
+<p>Provision a hardened, managed PostgreSQL database:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. DB Subnet Group across isolated subnets</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-subnet-group<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span>--db-subnet-group-name<span class="w"> </span>prod-db-subnet-group<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">  </span>--db-subnet-group-description<span class="w"> </span><span class="s2">"Isolated subnets for Multi-AZ RDS"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span>--subnet-ids<span class="w"> </span><span class="nv">$SUBNET_DB_AZ1</span><span class="w"> </span><span class="nv">$SUBNET_DB_AZ2</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 2. Resolve default engine version</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="nv">PG_VERSION</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-engine-versions<span class="w"> </span>--engine<span class="w"> </span>postgres<span class="w"> </span>--default-only<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBEngineVersions[0].EngineVersion'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="c1"># 3. Provision Multi-AZ PostgreSQL Engine</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>aws<span class="w"> </span>rds<span class="w"> </span>create-db-instance<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span>--db-instance-identifier<span class="w"> </span>prod-database<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">  </span>--db-name<span class="w"> </span>appdb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">  </span>--engine<span class="w"> </span>postgres<span class="w"> </span>--engine-version<span class="w"> </span><span class="nv">$PG_VERSION</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">  </span>--db-instance-class<span class="w"> </span>db.m6i.large<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">  </span>--allocated-storage<span class="w"> </span><span class="m">100</span><span class="w"> </span>--max-allocated-storage<span class="w"> </span><span class="m">500</span><span class="w"> </span>--storage-type<span class="w"> </span>gp3<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">  </span>--master-username<span class="w"> </span>dbadmin<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">  </span>--manage-master-user-password<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">  </span>--vpc-security-group-ids<span class="w"> </span><span class="nv">$DB_SG</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">  </span>--db-subnet-group-name<span class="w"> </span>prod-db-subnet-group<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">  </span>--multi-az<span class="w"> </span>--no-publicly-accessible<span class="w"> </span>--storage-encrypted<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="w">  </span>--backup-retention-period<span class="w"> </span><span class="m">30</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-24"><a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a><span class="w">  </span>--preferred-backup-window<span class="w"> </span><span class="s2">"03:00-04:00"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-25"><a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a><span class="w">  </span>--preferred-maintenance-window<span class="w"> </span><span class="s2">"Sun:04:30-05:30"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-26"><a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a><span class="w">  </span>--enable-performance-insights<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-27"><a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a><span class="w">  </span>--enable-cloudwatch-logs-exports<span class="w"> </span>postgresql<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-28"><a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a><span class="w">  </span>--copy-tags-to-snapshot<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-29"><a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a><span class="w">  </span>--deletion-protection
+</span><span id="__span-3-30"><a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>
+</span><span id="__span-3-31"><a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a><span class="c1"># Block until database initialization finishes</span>
+</span><span id="__span-3-32"><a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>aws<span class="w"> </span>rds<span class="w"> </span><span class="nb">wait</span><span class="w"> </span>db-instance-available<span class="w"> </span>--db-instance-identifier<span class="w"> </span>prod-database
+</span><span id="__span-3-33"><a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>
+</span><span id="__span-3-34"><a id="__codelineno-3-34" name="__codelineno-3-34" href="#__codelineno-3-34"></a><span class="c1"># Extract database endpoint and managed secret ARN</span>
+</span><span id="__span-3-35"><a id="__codelineno-3-35" name="__codelineno-3-35" href="#__codelineno-3-35"></a><span class="nv">DB_HOST</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>prod-database<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-36"><a id="__codelineno-3-36" name="__codelineno-3-36" href="#__codelineno-3-36"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBInstances[0].Endpoint.Address'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-3-37"><a id="__codelineno-3-37" name="__codelineno-3-37" href="#__codelineno-3-37"></a><span class="nv">DB_SECRET_ARN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>rds<span class="w"> </span>describe-db-instances<span class="w"> </span>--db-instance-identifier<span class="w"> </span>prod-database<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-3-38"><a id="__codelineno-3-38" name="__codelineno-3-38" href="#__codelineno-3-38"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'DBInstances[0].MasterUserSecret.SecretArn'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span></code></pre></div>
+<blockquote>
+<p>[!TIP]
+The <code>--manage-master-user-password</code> flag delegates credential generation and rotation to <strong>AWS Secrets Manager</strong>, ensuring that database passwords never appear in shell histories, process listings, or code.</p>
+</blockquote>
+<hr />
+<h3 id="phase-4-the-application-tier">📍 Phase 4: The Application Tier</h3>
+<h4 id="41-iam-instance-profile-zero-bastions-zero-ssh-keys">4.1 IAM Instance Profile (Zero Bastions, Zero SSH Keys)</h4>
+<p>Use AWS Systems Manager (SSM) Session Manager for all host shell interactions:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-role<span class="w"> </span>--role-name<span class="w"> </span>prod-app-role<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span>--assume-role-policy-document<span class="w"> </span><span class="s1">'{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"Service":"ec2.amazonaws.com"},"Action":"sts:AssumeRole"}]}'</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>aws<span class="w"> </span>iam<span class="w"> </span>attach-role-policy<span class="w"> </span>--role-name<span class="w"> </span>prod-app-role<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span>--policy-arn<span class="w"> </span>arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="c1"># Restrict Secrets Manager access strictly to the RDS secret ARN</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>aws<span class="w"> </span>iam<span class="w"> </span>put-role-policy<span class="w"> </span>--role-name<span class="w"> </span>prod-app-role<span class="w"> </span>--policy-name<span class="w"> </span>read-db-secret<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">  </span>--policy-document<span class="w"> </span><span class="s2">"{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"secretsmanager:GetSecretValue\",\"Resource\":\"</span><span class="nv">$DB_SECRET_ARN</span><span class="s2">\"}]}"</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>aws<span class="w"> </span>iam<span class="w"> </span>create-instance-profile<span class="w"> </span>--instance-profile-name<span class="w"> </span>prod-app-profile
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>aws<span class="w"> </span>iam<span class="w"> </span>add-role-to-instance-profile<span class="w"> </span>--instance-profile-name<span class="w"> </span>prod-app-profile<span class="w"> </span>--role-name<span class="w"> </span>prod-app-role
+</span></code></pre></div>
+<h4 id="42-application-user-data-bootstrap">4.2 Application User Data Bootstrap</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt; 'EOF' &gt; userdata.sh</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="s">#!/bin/bash</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s">set -eu</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s">dnf update -y</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s">dnf install -y jq postgresql15</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s"># Provision local application directory and healthcheck endpoint</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s">mkdir -p /srv/app &amp;&amp; echo ok &gt; /srv/app/healthz</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="s">chown -R ec2-user:ec2-user /srv/app</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="s"># Pull database credentials dynamically from AWS Secrets Manager</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="s">SECRET=$(aws secretsmanager get-secret-value --secret-id "__SECRET_ARN__" \</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="s">  --region us-east-1 --query SecretString --output text)</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="s">install -m 600 -o ec2-user -g ec2-user /dev/null /etc/app.env</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="s">{</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="s">  echo "DB_HOST=__DB_HOST__"</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="s">  echo "DB_USER=$(echo "$SECRET" | jq -r .username)"</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="s">  echo "DB_PASS=$(echo "$SECRET" | jq -r .password)"</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="s">  echo "PORT=8080"</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="s">} &gt; /etc/app.env</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="s"># Configure systemd unit</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="s">cat &lt;&lt; 'SERVICE' &gt; /etc/systemd/system/app.service</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="s">[Unit]</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="s">Description=Application Tier Service</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="s">After=network.target</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="s">[Service]</span>
+</span><span id="__span-5-30"><a id="__codelineno-5-30" name="__codelineno-5-30" href="#__codelineno-5-30"></a><span class="s">User=ec2-user</span>
+</span><span id="__span-5-31"><a id="__codelineno-5-31" name="__codelineno-5-31" href="#__codelineno-5-31"></a><span class="s">WorkingDirectory=/srv/app</span>
+</span><span id="__span-5-32"><a id="__codelineno-5-32" name="__codelineno-5-32" href="#__codelineno-5-32"></a><span class="s">EnvironmentFile=/etc/app.env</span>
+</span><span id="__span-5-33"><a id="__codelineno-5-33" name="__codelineno-5-33" href="#__codelineno-5-33"></a><span class="s">ExecStart=/usr/bin/python3 -m http.server 8080</span>
+</span><span id="__span-5-34"><a id="__codelineno-5-34" name="__codelineno-5-34" href="#__codelineno-5-34"></a><span class="s">Restart=always</span>
+</span><span id="__span-5-35"><a id="__codelineno-5-35" name="__codelineno-5-35" href="#__codelineno-5-35"></a>
+</span><span id="__span-5-36"><a id="__codelineno-5-36" name="__codelineno-5-36" href="#__codelineno-5-36"></a><span class="s">[Install]</span>
+</span><span id="__span-5-37"><a id="__codelineno-5-37" name="__codelineno-5-37" href="#__codelineno-5-37"></a><span class="s">WantedBy=multi-user.target</span>
+</span><span id="__span-5-38"><a id="__codelineno-5-38" name="__codelineno-5-38" href="#__codelineno-5-38"></a><span class="s">SERVICE</span>
+</span><span id="__span-5-39"><a id="__codelineno-5-39" name="__codelineno-5-39" href="#__codelineno-5-39"></a>
+</span><span id="__span-5-40"><a id="__codelineno-5-40" name="__codelineno-5-40" href="#__codelineno-5-40"></a><span class="s">systemctl daemon-reload</span>
+</span><span id="__span-5-41"><a id="__codelineno-5-41" name="__codelineno-5-41" href="#__codelineno-5-41"></a><span class="s">systemctl enable --now app.service</span>
+</span><span id="__span-5-42"><a id="__codelineno-5-42" name="__codelineno-5-42" href="#__codelineno-5-42"></a><span class="s">EOF</span>
+</span><span id="__span-5-43"><a id="__codelineno-5-43" name="__codelineno-5-43" href="#__codelineno-5-43"></a>
+</span><span id="__span-5-44"><a id="__codelineno-5-44" name="__codelineno-5-44" href="#__codelineno-5-44"></a>sed<span class="w"> </span>-i<span class="w"> </span><span class="s2">"s|__SECRET_ARN__|</span><span class="nv">$DB_SECRET_ARN</span><span class="s2">|; s|__DB_HOST__|</span><span class="nv">$DB_HOST</span><span class="s2">|"</span><span class="w"> </span>userdata.sh
+</span><span id="__span-5-45"><a id="__codelineno-5-45" name="__codelineno-5-45" href="#__codelineno-5-45"></a><span class="nv">USERDATA_B64</span><span class="o">=</span><span class="k">$(</span>base64<span class="w"> </span>-w<span class="w"> </span><span class="m">0</span><span class="w"> </span>userdata.sh<span class="k">)</span>
+</span></code></pre></div>
+<h4 id="43-ec2-launch-template-imdsv2-enforced">4.3 EC2 Launch Template (IMDSv2 Enforced)</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-launch-template<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>--launch-template-name<span class="w"> </span>prod-app-template<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>--version-description<span class="w"> </span><span class="s2">"v1.0"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>--launch-template-data<span class="w"> </span><span class="s2">"{</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s2">    \"ImageId\": \"resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64\",</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s2">    \"InstanceType\": \"c6i.large\",</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s2">    \"SecurityGroupIds\": [\"</span><span class="nv">$APP_SG</span><span class="s2">\"],</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s2">    \"IamInstanceProfile\": {\"Name\": \"prod-app-profile\"},</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s2">    \"MetadataOptions\": {\"HttpTokens\": \"required\", \"HttpPutResponseHopLimit\": 1},</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="s2">    \"BlockDeviceMappings\": [{\"DeviceName\": \"/dev/xvda\", \"Ebs\": {\"Encrypted\": true, \"VolumeType\": \"gp3\"}}],</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="s2">    \"UserData\": \"</span><span class="nv">$USERDATA_B64</span><span class="s2">\"</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="s2">  }"</span>
+</span></code></pre></div>
+<hr />
+<h3 id="phase-5-the-web-tier-alb-waf-asg">📍 Phase 5: The Web Tier (ALB + WAF + ASG)</h3>
+<h4 id="51-target-group-application-load-balancer">5.1 Target Group &amp; Application Load Balancer</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nv">TG_ARN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>elbv2<span class="w"> </span>create-target-group<span class="w"> </span>--name<span class="w"> </span>prod-app-tg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--protocol<span class="w"> </span>HTTP<span class="w"> </span>--port<span class="w"> </span><span class="m">8080</span><span class="w"> </span>--vpc-id<span class="w"> </span><span class="nv">$VPC_ID</span><span class="w"> </span>--target-type<span class="w"> </span>instance<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span>--health-check-protocol<span class="w"> </span>HTTP<span class="w"> </span>--health-check-port<span class="w"> </span><span class="m">8080</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span>--health-check-path<span class="w"> </span>/healthz<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span>--healthy-threshold-count<span class="w"> </span><span class="m">2</span><span class="w"> </span>--unhealthy-threshold-count<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span>--health-check-timeout-seconds<span class="w"> </span><span class="m">5</span><span class="w"> </span>--health-check-interval-seconds<span class="w"> </span><span class="m">15</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'TargetGroups[0].TargetGroupArn'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="nv">ALB_ARN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>elbv2<span class="w"> </span>create-load-balancer<span class="w"> </span>--name<span class="w"> </span>prod-public-alb<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span>--subnets<span class="w"> </span><span class="nv">$SUBNET_WEB_AZ1</span><span class="w"> </span><span class="nv">$SUBNET_WEB_AZ2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span>--security-groups<span class="w"> </span><span class="nv">$ALB_SG</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">  </span>--scheme<span class="w"> </span>internet-facing<span class="w"> </span>--type<span class="w"> </span>application<span class="w"> </span>--ip-address-type<span class="w"> </span>ipv4<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'LoadBalancers[0].LoadBalancerArn'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>modify-load-balancer-attributes<span class="w"> </span>--load-balancer-arn<span class="w"> </span><span class="nv">$ALB_ARN</span><span class="w"> </span>--attributes<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">  </span><span class="nv">Key</span><span class="o">=</span>routing.http.drop_invalid_header_fields.enabled,Value<span class="o">=</span><span class="nb">true</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="nv">Key</span><span class="o">=</span>deletion_protection.enabled,Value<span class="o">=</span><span class="nb">true</span>
+</span></code></pre></div>
+<h4 id="52-listeners-https-with-modern-tls-policy-http-redirect">5.2 Listeners (HTTPS with Modern TLS Policy &amp; HTTP Redirect)</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># HTTP -&gt; HTTPS Redirect</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>aws<span class="w"> </span>elbv2<span class="w"> </span>create-listener<span class="w"> </span>--load-balancer-arn<span class="w"> </span><span class="nv">$ALB_ARN</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span>--protocol<span class="w"> </span>HTTP<span class="w"> </span>--port<span class="w"> </span><span class="m">80</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span>--default-actions<span class="w"> </span><span class="s1">'Type=redirect,RedirectConfig={Protocol=HTTPS,Port=443,StatusCode=HTTP_301}'</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="c1"># HTTPS Listener (Replace with valid ACM Certificate ARN)</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="c1"># aws elbv2 create-listener --load-balancer-arn $ALB_ARN \</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="c1">#   --protocol HTTPS --port 443 \</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="c1">#   --ssl-policy ELBSecurityPolicy-TLS13-1-2-2021-06 \</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="c1">#   --certificates CertificateArn=arn:aws:acm:us-east-1:ACCOUNT_ID:certificate/CERT_ID \</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="c1">#   --default-actions Type=forward,TargetGroupArn=$TG_ARN</span>
+</span></code></pre></div>
+<h4 id="53-aws-waf-regional-web-acl-integration">5.3 AWS WAF Regional Web ACL Integration</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nv">WAF_ARN</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>wafv2<span class="w"> </span>create-web-acl<span class="w"> </span>--name<span class="w"> </span>prod-web-acl<span class="w"> </span>--scope<span class="w"> </span>REGIONAL<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span>--default-action<span class="w"> </span><span class="nv">Allow</span><span class="o">={}</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span>--visibility-config<span class="w"> </span><span class="nv">SampledRequestsEnabled</span><span class="o">=</span>true,CloudWatchMetricsEnabled<span class="o">=</span>true,MetricName<span class="o">=</span>prod-web-acl<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span>--rules<span class="w"> </span><span class="s1">'[{"Name":"AWSCommon","Priority":1,"Statement":{"ManagedRuleGroupStatement":{"VendorName":"AWS","Name":"AWSManagedRulesCommonRuleSet"}},"OverrideAction":{"None":{}},"VisibilityConfig":{"SampledRequestsEnabled":true,"CloudWatchMetricsEnabled":true,"MetricName":"AWSCommon"}}]'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span>--query<span class="w"> </span>Summary.ARN<span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>aws<span class="w"> </span>wafv2<span class="w"> </span>associate-web-acl<span class="w"> </span>--web-acl-arn<span class="w"> </span><span class="nv">$WAF_ARN</span><span class="w"> </span>--resource-arn<span class="w"> </span><span class="nv">$ALB_ARN</span>
+</span></code></pre></div>
+<h4 id="54-auto-scaling-group-target-tracking-scaling">5.4 Auto Scaling Group &amp; Target Tracking Scaling</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>create-auto-scaling-group<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>prod-app-asg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span>--launch-template<span class="w"> </span><span class="s2">"LaunchTemplateName=prod-app-template,Version=\$Latest"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span>--min-size<span class="w"> </span><span class="m">2</span><span class="w"> </span>--max-size<span class="w"> </span><span class="m">10</span><span class="w"> </span>--desired-capacity<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span>--vpc-zone-identifier<span class="w"> </span><span class="s2">"</span><span class="nv">$SUBNET_APP_AZ1</span><span class="s2">,</span><span class="nv">$SUBNET_APP_AZ2</span><span class="s2">"</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span>--target-group-arns<span class="w"> </span><span class="nv">$TG_ARN</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span>--health-check-type<span class="w"> </span>ELB<span class="w"> </span>--health-check-grace-period<span class="w"> </span><span class="m">300</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+</span><span id="__span-10-9"><a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="c1"># Target tracking scaling: Maintain fleet-wide average CPU utilization at 60%</span>
+</span><span id="__span-10-10"><a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>put-scaling-policy<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-11"><a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">  </span>--auto-scaling-group-name<span class="w"> </span>prod-app-asg<span class="w"> </span>--policy-name<span class="w"> </span>cpu-target-60<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-12"><a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">  </span>--policy-type<span class="w"> </span>TargetTrackingScaling<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-10-13"><a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">  </span>--target-tracking-configuration<span class="w"> </span><span class="s1">'{"PredefinedMetricSpecification":{"PredefinedMetricType":"ASGAverageCPUUtilization"},"TargetValue":60.0}'</span>
+</span></code></pre></div>
+<hr />
+<h3 id="phase-6-production-verification">📍 Phase 6: Production Verification</h3>
+<h4 id="1-ingress-verification">1. Ingress Verification</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">ALB_DNS</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>elbv2<span class="w"> </span>describe-load-balancers<span class="w"> </span>--load-balancer-arns<span class="w"> </span><span class="nv">$ALB_ARN</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'LoadBalancers[0].DNSName'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>curl<span class="w"> </span>-I<span class="w"> </span><span class="s2">"http://</span><span class="si">${</span><span class="nv">ALB_DNS</span><span class="si">}</span><span class="s2">/healthz"</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="c1"># Expected: HTTP/1.1 200 OK (or HTTP/1.1 301 Moved Permanently if redirecting)</span>
+</span></code></pre></div>
+<h4 id="2-perimeter-isolation-audit-run-from-external-internet">2. Perimeter Isolation Audit (Run from External Internet)</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># 1. Attempt connection to RDS endpoint</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>nc<span class="w"> </span>-zv<span class="w"> </span>-w<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="s2">"</span><span class="nv">$DB_HOST</span><span class="s2">"</span><span class="w"> </span><span class="m">5432</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="c1"># Expected: Connection timed out</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="c1"># 2. Attempt connection to internal App Tier private IP</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>nc<span class="w"> </span>-zv<span class="w"> </span>-w<span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">10</span>.0.10.25<span class="w"> </span><span class="m">8080</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="c1"># Expected: Connection timed out (Non-routable RFC 1918 address)</span>
+</span></code></pre></div>
+<h4 id="3-app-to-database-connection-audit">3. App-to-Database Connection Audit</h4>
+<p>Start an AWS Systems Manager session to an application instance:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nv">INSTANCE_ID</span><span class="o">=</span><span class="k">$(</span>aws<span class="w"> </span>autoscaling<span class="w"> </span>describe-auto-scaling-groups<span class="w"> </span>--auto-scaling-group-names<span class="w"> </span>prod-app-asg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span>--query<span class="w"> </span><span class="s1">'AutoScalingGroups[0].Instances[0].InstanceId'</span><span class="w"> </span>--output<span class="w"> </span>text<span class="k">)</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>aws<span class="w"> </span>ssm<span class="w"> </span>start-session<span class="w"> </span>--target<span class="w"> </span><span class="s2">"</span><span class="nv">$INSTANCE_ID</span><span class="s2">"</span>
+</span></code></pre></div>
+<p>Inside the Session Manager shell:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">source</span><span class="w"> </span>/etc/app.env
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="nv">PGPASSWORD</span><span class="o">=</span><span class="s2">"</span><span class="nv">$DB_PASS</span><span class="s2">"</span><span class="w"> </span>psql<span class="w"> </span>-h<span class="w"> </span><span class="s2">"</span><span class="nv">$DB_HOST</span><span class="s2">"</span><span class="w"> </span>-U<span class="w"> </span><span class="s2">"</span><span class="nv">$DB_USER</span><span class="s2">"</span><span class="w"> </span>-d<span class="w"> </span>appdb<span class="w"> </span>-c<span class="w"> </span><span class="s1">'\conninfo'</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="c1"># Expected: Confirms encrypted SSL connection to the PostgreSQL database</span>
+</span></code></pre></div></p>
+<hr />
+<h3 id="phase-7-day-2-operations-incident-triage">📍 Phase 7: Day-2 Operations &amp; Incident Triage</h3>
+<h4 id="database-failover-chaos-test">Database Failover Chaos Test</h4>
+<p>Test database failover during a designated maintenance window:</p>
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>aws<span class="w"> </span>rds<span class="w"> </span>reboot-db-instance<span class="w"> </span>--db-instance-identifier<span class="w"> </span>prod-database<span class="w"> </span>--force-failover
+</span></code></pre></div>
+<em>The standby instance assumes primary status within 60 to 120 seconds. Ensure application connection pools configure automated retries and short DNS TTL resolution.</em></p>
+<h4 id="zero-downtime-rolling-release">Zero-Downtime Rolling Release</h4>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># 1. Author new Launch Template Version with updated AMI</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>aws<span class="w"> </span>ec2<span class="w"> </span>create-launch-template-version<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span>--launch-template-name<span class="w"> </span>prod-app-template<span class="w"> </span>--source-version<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span>--launch-template-data<span class="w"> </span><span class="s1">'{"ImageId":"ami-NEW_AMI_ID"}'</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="c1"># 2. Trigger automated Instance Refresh</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>aws<span class="w"> </span>autoscaling<span class="w"> </span>start-instance-refresh<span class="w"> </span>--auto-scaling-group-name<span class="w"> </span>prod-app-asg<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">  </span>--preferences<span class="w"> </span><span class="s1">'{"MinHealthyPercentage": 50, "InstanceWarmup": 300}'</span>
+</span></code></pre></div>
+<hr />
+<h3 id="phase-8-observability-audit-baseline">📍 Phase 8: Observability &amp; Audit Baseline</h3>
+<ul>
+<li>[ ] <strong>VPC Flow Logs:</strong> Capture all traffic metadata and stream to an encrypted S3 audit bucket.</li>
+<li>[ ] <strong>CloudWatch Alarms:</strong> Configure alerts for ALB <code>HTTPCode_Target_5XX_Count</code>, <code>UnHealthyHostCount</code>, RDS <code>CPUUtilization</code>, and <code>FreeStorageSpace</code>.</li>
+<li>[ ] <strong>AWS CloudTrail:</strong> Enable multi-region trail logging for all control plane and data plane API calls.</li>
+<li>[ ] <strong>AWS Backup:</strong> Automate daily EBS volume and RDS cross-region snapshots to satisfy enterprise Recovery Point Objectives (RPO).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; Bruce Minanga
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>

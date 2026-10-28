@@ -1,0 +1,964 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Bruce Minanga">
+      
+      
+        <link rel="canonical" href="https://bruceminanga.github.io/Conquer-DevSecOps/2_Conquer_DevSecOps/3_Tools/Terraform/05-terraform-workflow/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>🚀 Mastering Infrastructure as Code: The Terraform Workflow — A Complete Engineering Runbook - Conquer DevSecOps</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mastering-infrastructure-as-code-the-terraform-workflow-a-complete-engineering-runbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-header__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Conquer DevSecOps
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              🚀 Mastering Infrastructure as Code: The Terraform Workflow — A Complete Engineering Runbook
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Conquer DevSecOps" class="md-nav__button md-logo" aria-label="Conquer DevSecOps" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Conquer DevSecOps
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bruceminanga/Conquer-DevSecOps" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    bruceminanga/Conquer-DevSecOps
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../hiring_DevOps_Engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hiring in DevOps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../1_DevOps_playground/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DevSecOps playground
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🔥 DevSecOps Articles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#part-1-why-this-workflow-is-mandatory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ PART 1: Why This Workflow Is Mandatory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ PART 1: Why This Workflow Is Mandatory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-terraform-init" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1️⃣ terraform init
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-terraform-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2️⃣ terraform plan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-terraform-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3️⃣ terraform apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-terraform-destroy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4️⃣ terraform destroy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-2-concepts-that-make-this-production-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛡️ PART 2: Concepts That Make This Production-Safe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛡️ PART 2: Concepts That Make This Production-Safe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-remote-state-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Remote State Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-variables-and-parameter-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Variables and Parameter Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-workspaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Workspaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-drift-and-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Drift and Import
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-3-the-complete-hands-on-runbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        💻 PART 3: The Complete Hands-On Runbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="💻 PART 3: The Complete Hands-On Runbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-0-author-the-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 0: Author the Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 0: Author the Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#variablestf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        variables.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraformtfvars" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terraform.tfvars
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maintf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main.tf
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Initialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-formatting-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Formatting &amp; Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-planning-save-the-plan-artifact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Planning (Save the Plan Artifact)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-day-2-operations-updating-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Day-2 Operations (Updating Infrastructure)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-decommissioning-teardown" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Decommissioning (Teardown)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-production-master-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ The Production Master Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="mastering-infrastructure-as-code-the-terraform-workflow-a-complete-engineering-runbook">🚀 Mastering Infrastructure as Code: The Terraform Workflow — A Complete Engineering Runbook</h1>
+<p>To truly master Infrastructure as Code (IaC), you must understand Terraform's core workflow: <strong>Init, Plan, Apply, and Destroy</strong> — plus the architectural guardrails that make it production-safe.</p>
+<p>Terraform operates on <strong>Declarative Infrastructure</strong>. You write code declaring what you want (the <em>Desired State</em>), and Terraform figures out how to reconcile that against reality (the <em>Actual State</em>). To bridge that gap safely, it enforces a strict execution lifecycle.</p>
+<p>Here is an engineering breakdown of why this workflow is mandatory, followed by a hands-on, zero-assumptions runbook.</p>
+<hr />
+<h2 id="part-1-why-this-workflow-is-mandatory">🛠️ PART 1: Why This Workflow Is Mandatory</h2>
+<h3 id="1-terraform-init">1️⃣ <code>terraform init</code></h3>
+<ul>
+<li><strong>Why we need it:</strong> Terraform ships as a lightweight, provider-agnostic core engine. It contains no built-in logic for AWS, Azure, GCP, Kubernetes, or local filesystems.</li>
+<li><strong>What it does:</strong> Scans your configuration files for required providers, queries the Terraform Registry, downloads the provider plugin binaries into a local <code>.terraform/</code> directory, locks dependency versions in <code>.terraform.lock.hcl</code>, and downloads any referenced remote modules.</li>
+<li><strong>Without it:</strong> Terraform cannot parse provider schemas or establish network connections to target APIs.</li>
+</ul>
+<hr />
+<h3 id="2-terraform-plan">2️⃣ <code>terraform plan</code></h3>
+<ul>
+<li><strong>Why we need it:</strong> Cloud infrastructure is expensive, interconnected, and fragile. Blindly applying changes without inspecting the diff risks catastrophic outages (e.g., unintentionally destroying production databases or route tables).</li>
+<li><strong>What it does:</strong> Refreshes its awareness of current infrastructure via Cloud APIs, compares reality against your declarative code, calculates the execution graph delta, and outputs a detailed preview of all resource additions, modifications, and deletions.</li>
+<li><strong>Production Best Practice:</strong> Always lock the plan file:
+  <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>tfplan
+</span></code></pre></div>
+  This guarantees that the exact execution path reviewed and approved in your pull request is what runs during deployment—even if state or code changes moments later.</li>
+</ul>
+<hr />
+<h3 id="3-terraform-apply">3️⃣ <code>terraform apply</code></h3>
+<ul>
+<li><strong>Why we need it:</strong> This stage executes the transition from text declarations to live cloud infrastructure.</li>
+<li><strong>What it does:</strong> Takes the calculated execution plan, translates declarative blocks into imperative HTTP API requests (<code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>), awaits provider confirmations, and commits the resulting IDs and attributes to <code>terraform.tfstate</code>.</li>
+</ul>
+<blockquote>
+<p>[!WARNING]
+<strong>Never manually edit the state file.</strong> Hand-editing raw JSON state risks corrupting checksums, serial numbers, and resource lineage, causing Terraform to make unpredictable API decisions.</p>
+</blockquote>
+<hr />
+<h3 id="4-terraform-destroy">4️⃣ <code>terraform destroy</code></h3>
+<ul>
+<li><strong>Why we need it:</strong> Infrastructure has a finite lifecycle. Abandoned test clusters, staging instances, and orphaned disks waste budgets and widen attack surfaces.</li>
+<li><strong>What it does:</strong> Evaluates the state file, reverses the Directed Acyclic Graph (DAG) dependency order, and systematically issues deletion API calls for every resource tracked in the workspace.</li>
+<li><strong>Without it:</strong> Teams waste engineering hours tracking down orphaned "ghost resources" across cloud provider consoles.</li>
+</ul>
+<hr />
+<h2 id="part-2-concepts-that-make-this-production-safe">🛡️ PART 2: Concepts That Make This Production-Safe</h2>
+<h3 id="1-remote-state-backends">1. Remote State Backends</h3>
+<p>Storing <code>terraform.tfstate</code> on a local laptop only works for solo sandbox experiments. The moment two engineers or concurrent CI runners touch the same codebase, state conflicts arise.</p>
+<p>In production environments, state must reside in a centralized remote backend (such as AWS S3, Google Cloud Storage, Azure Blob Storage, or Terraform Cloud).</p>
+<blockquote>
+<p>[!TIP]
+<strong>Modern AWS S3 Backend Note:</strong><br />
+In Terraform 1.10+, the S3 backend supports native S3 conditional writes for state locking, removing the mandatory requirement for a separate DynamoDB table on new setups (though legacy setups using S3 + DynamoDB remain widely supported) [cite: 1, 2].</p>
+</blockquote>
+<p><strong>Remote state ensures:</strong>
+* <strong>State Locking:</strong> Only one engineer or CI/CD job can apply changes at a time, eliminating write-race conditions.
+* <strong>Durability:</strong> State isn't lost if a developer workstation fails.
+* <strong>Single Source of Truth:</strong> Every contributor evaluates code against identical metadata.</p>
+<hr />
+<h3 id="2-variables-and-parameter-separation">2. Variables and Parameter Separation</h3>
+<p>Hardcoding static values directly inside <code>main.tf</code> prevents code reusability. Production patterns separate concerns across three distinct files:</p>
+<ul>
+<li><code>variables.tf</code>: Defines input schema, types, and validation rules.</li>
+<li><code>terraform.tfvars</code>: Assigns concrete values per deployment (never commit raw secrets here).</li>
+<li><code>main.tf</code>: References parameters dynamically via <code>var.&lt;variable_name&gt;</code>.</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>  ┌──────────────────┐       ┌──────────────────────┐
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  │   variables.tf   │       │   terraform.tfvars   │
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  │  (Schema &amp; Type) │       │   (Concrete Values)  │
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  └────────┬─────────┘       └──────────┬───────────┘
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>           │                            │
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>           └──────────────┬─────────────┘
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>                          ▼
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>               ┌──────────────────────┐
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>               │       main.tf        │
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>               │   (var.file_content) │
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>               └──────────────────────┘
+</span></code></pre></div>
+<hr />
+<h3 id="3-workspaces">3. Workspaces</h3>
+<p>Terraform Workspaces allow you to manage distinct environments (e.g., <code>dev</code>, <code>staging</code>, <code>prod</code>) from a single configuration by maintaining separate state files under <code>terraform.tfstate.d/&lt;workspace-name&gt;/</code>.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>terraform<span class="w"> </span>workspace<span class="w"> </span>new<span class="w"> </span>staging
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>terraform<span class="w"> </span>workspace<span class="w"> </span><span class="k">select</span><span class="w"> </span>staging
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>terraform<span class="w"> </span>apply
+</span></code></pre></div>
+<hr />
+<h3 id="4-drift-and-import">4. Drift and Import</h3>
+<p>Real-world operations introduce changes outside of standard pipelines:</p>
+<ul>
+<li><strong>Drift:</strong> An administrator modifies firewall rules or instance sizes manually via the cloud console. Running <code>terraform plan</code> detects this out-of-band delta and schedules a corrective apply to bring reality back into compliance.</li>
+<li><strong>Import:</strong> If infrastructure was created manually or via legacy scripts before adopting IaC, <code>terraform import</code> imports existing cloud IDs into the state file without triggering destructive recreations.</li>
+</ul>
+<hr />
+<h2 id="part-3-the-complete-hands-on-runbook">💻 PART 3: The Complete Hands-On Runbook</h2>
+<p>This exercise uses the official <code>local</code> provider so you can test the entire lifecycle on your laptop with no cloud credentials required.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>Terraform CLI installed (<code>terraform -version</code>).</li>
+<li>Terminal open in an empty directory.</li>
+</ul>
+<hr />
+<h3 id="step-0-author-the-configuration">Step 0: Author the Configuration</h3>
+<p>Create an isolated directory:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mkdir<span class="w"> </span>terraform-training<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>terraform-training
+</span></code></pre></div>
+<p>Inside this directory, create the following three files:</p>
+<h4 id="variablestf"><code>variables.tf</code></h4>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kr">variable</span><span class="w"> </span><span class="nv">"file_content"</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="na">description</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"The content to write into the output file"</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="na">type</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="kt">string</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h4 id="terraformtfvars"><code>terraform.tfvars</code></h4>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="na">file_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Terraform is easy to master once you understand the workflow!"</span>
+</span></code></pre></div>
+<h4 id="maintf"><code>main.tf</code></h4>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nb">terraform</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nb">required_providers</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nb">local</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="na">source</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="s2">"hashicorp/local"</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="na">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~&gt; 2.0"</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="kr">resource</span><span class="w"> </span><span class="nc">"local_file"</span><span class="w"> </span><span class="nv">"my_first_resource"</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="na">content</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nv">var.file_content</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="na">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"${path.module}/hello_world.txt"</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span>
+</span></code></pre></div>
+<hr />
+<h3 id="step-1-initialization">Step 1: Initialization</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>terraform<span class="w"> </span>init
+</span></code></pre></div>
+<p>Terraform downloads the <code>hashicorp/local</code> provider plugin and writes:
+* <code>.terraform/</code>: Local provider cache directory.
+* <code>.terraform.lock.hcl</code>: Cryptographic dependency lock file (<strong>commit this to Git</strong>).</p>
+<hr />
+<h3 id="step-2-formatting-validation">Step 2: Formatting &amp; Validation</h3>
+<p>Format syntax and validate logic:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># Auto-formats code according to HCL conventions</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>terraform<span class="w"> </span>fmt
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="c1"># Verifies syntax, provider arguments, and variable references</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>terraform<span class="w"> </span>validate
+</span></code></pre></div>
+<p><strong>Expected Output:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Success! The configuration is valid.
+</span></code></pre></div></p>
+<hr />
+<h3 id="step-3-planning-save-the-plan-artifact">Step 3: Planning (Save the Plan Artifact)</h3>
+<p>Generate and save the execution plan:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>myplan.tfplan
+</span></code></pre></div>
+<p><strong>Understanding Plan Symbols:</strong>
+* <code>+</code> : Resource creation.
+* <code>-</code> : Resource destruction.
+* <code>~</code> : In-place modification.
+* <code>-/\+</code> : Destroy and recreate (replacement).</p>
+<p>You will see:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Plan: 1 to add, 0 to change, 0 to destroy.
+</span></code></pre></div></p>
+<hr />
+<h3 id="step-4-execution">Step 4: Execution</h3>
+<p>Apply the saved plan file:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>terraform<span class="w"> </span>apply<span class="w"> </span>myplan.tfplan
+</span></code></pre></div>
+<p>Terraform executes the exact plan you generated:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+</span></code></pre></div></p>
+<p>Verify that <code>hello_world.txt</code> now exists on disk and examine <code>terraform.tfstate</code>.</p>
+<hr />
+<h3 id="step-5-day-2-operations-updating-infrastructure">Step 5: Day-2 Operations (Updating Infrastructure)</h3>
+<p>Modify <code>terraform.tfvars</code>:</p>
+<div class="language-hcl highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="na">file_content</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"I have updated my infrastructure!"</span>
+</span></code></pre></div>
+<p>Generate a new plan to observe the replacement action:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>terraform<span class="w"> </span>plan<span class="w"> </span>-out<span class="o">=</span>myplan.tfplan
+</span></code></pre></div>
+<blockquote>
+<p>[!NOTE]
+Notice the <code>-/\+</code> indicator: The <code>local_file</code> provider cannot update file contents in-place on disk; it must destroy the previous resource and create a new one. In production cloud environments, replacing a resource might mean a new IP address or instance recreation. Always review replacement warnings carefully.</p>
+</blockquote>
+<p>Apply the verified plan:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>terraform<span class="w"> </span>apply<span class="w"> </span>myplan.tfplan
+</span></code></pre></div>
+<p>Inspect <code>hello_world.txt</code> to confirm that the file contents have been updated.</p>
+<hr />
+<h3 id="step-6-decommissioning-teardown">Step 6: Decommissioning (Teardown)</h3>
+<p>Destroy the managed infrastructure:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>terraform<span class="w"> </span>destroy
+</span></code></pre></div>
+<p>Review the destructive plan summary and type <code>yes</code> when prompted.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Destroy complete! Resources: 1 destroyed.
+</span></code></pre></div>
+<p><code>hello_world.txt</code> is removed, and <code>terraform.tfstate</code> is cleared of managed resources.</p>
+<hr />
+<h2 id="the-production-master-checklist">✅ The Production Master Checklist</h2>
+<p>Commit this operational lifecycle loop to memory:</p>
+<ol>
+<li>[ ] <strong><code>terraform init</code></strong> (Run upon project setup, or whenever adding new providers/modules).</li>
+<li>[ ] <strong>Separate inputs</strong>: Always separate <code>variables.tf</code> and <code>terraform.tfvars</code> from <code>main.tf</code>.</li>
+<li>[ ] <strong>Configure Remote State</strong>: Implement remote storage with state locking before sharing code across teams.</li>
+<li>[ ] <strong>Run Checks</strong>: Execute <code>terraform fmt</code> and <code>terraform validate</code> in pre-commit hooks or CI.</li>
+<li>[ ] <strong>Lock the Plan</strong>: Always run <code>terraform plan -out=tfplan</code> in your CI pipeline.</li>
+<li>[ ] <strong>Apply the Plan</strong>: Run <code>terraform apply tfplan</code> to guarantee deterministic execution.</li>
+<li>[ ] <strong>Clean Up</strong>: Run <code>terraform destroy</code> when decommissioning temporary or preview environments.</li>
+</ol>
+<p>Extra:
+1. <a href="https://www.pynetlabs.com/terraform-lifecycle/">Terraform Lifecycle: Workflow and Lifecycle Meta-Argument</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; Bruce Minanga
+    </div>
+  
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.expand", "navigation.indexes", "navigation.top", "navigation.path", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+    
+  </body>
+</html>
