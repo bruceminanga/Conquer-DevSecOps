@@ -2,30 +2,60 @@ site_name: Mastering DevSecOps
 site_url: https://bruceminanga.github.io/Mastering-DevSecOps/
 site_author: Bruce Minanga
 
+# Adds the GitHub icon, stars, and repository link in the top-right header
+repo_url: https://github.com/bruceminanga/Mastering-DevSecOps
+repo_name: bruceminanga/Mastering-DevSecOps
+
 theme:
   name: material
   palette:
     # Light mode
     - scheme: default
       primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     # Dark mode
     - scheme: slate
       primary: indigo
+      accent: indigo
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
   features:
     - navigation.expand
     - navigation.indexes
+    - navigation.top # Adds a smooth "Back to top" button
+    - navigation.path # Adds breadcrumb navigation at the top of pages
     - search.suggest
     - search.highlight
+    - search.share # Allows sharing direct search URLs
+    - content.code.copy # Adds a 1-click "Copy" button to all code blocks
+    - content.code.annotate # Allows clickable line annotations in code/YAML
 
-# Navigation layout matching your exact folders:
+# Navigation layout
 nav:
   - Home: index.md
   - Hiring in DevOps: hiring_DevOps_Engineering.md
   - DevOps Articles: "1_DevOps Articles/"
   - Conquer DevSecOps: 2_Conquer_DevSecOps/
+
+# --- CRITICAL FOR DEVSECOPS & CODE DOCUMENTATION ---
+markdown_extensions:
+  - admonition # Enables callout boxes (!!! note, !!! danger, etc.)
+  - pymdownx.details # Collapsible callout boxes (??? note)
+  - pymdownx.superfences: # Allows nesting code blocks inside tabs & lists
+      custom_fences:
+        - name: mermaid # Text-to-diagram support (architecture flows)
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight: # Syntax highlighting for Bash, YAML, Dockerfiles, etc.
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite # Highlight inline code snippets
+  - pymdownx.tabbed: # Multi-tool switchable tabs (=== "Docker", === "K8s")
+      alternate_style: true
+  - pymdownx.snippets # Reuse common code/text snippets across pages
+  - tables # Clean markdown table support
