@@ -1,6 +1,7 @@
 site_name: Conquer DevSecOps
 site_url: https://bruceminanga.github.io/Mastering-DevSecOps/
 site_author: Bruce Minanga
+copyright: Copyright &copy; Bruce Minanga
 
 # Adds the GitHub icon, stars, and repository link in the top-right header
 repo_url: https://github.com/bruceminanga/Mastering-DevSecOps
