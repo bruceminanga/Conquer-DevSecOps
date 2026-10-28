@@ -2,6 +2,7 @@
 # 🛡️ Conquer DevSecOps
 
 ![Conquer DevSecOps](<Conquer DevOps.png>)
+*Figure: The 90% Rule for Continuous Improvement*
 
 ### How:
 
