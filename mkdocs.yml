@@ -38,8 +38,8 @@ theme:
 nav:
   - Home: index.md
   - Hiring in DevOps: hiring_DevOps_Engineering.md
-  - DevOps Articles: "1_DevOps Articles/"
-  - Conquer DevSecOps: 2_Conquer_DevSecOps/
+  - DevOps playground: "1_DevOps Articles/"
+  - DevOps Articles: 2_Conquer_DevSecOps/
 
 # --- CRITICAL FOR DEVSECOPS & CODE DOCUMENTATION ---
 markdown_extensions:
