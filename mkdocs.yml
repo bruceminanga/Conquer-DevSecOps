@@ -1,0 +1,30 @@
+site_name: Mastering DevSecOps
+site_url: https://bruceminanga.github.io/Mastering-DevSecOps/
+site_author: Bruce Minanga
+
+theme:
+  name: material
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.expand
+    - search.suggest
+    - search.highlight
+
+# Navigation layout matching your exact folders:
+nav:
+  - Home: index.md
+  - Hiring in DevOps: hiring_DevOps_Engineering.md
+  - DevOps Articles: "1_DevOps Articles/"
+  - Conquer DevSecOps: 2_Conquer_DevSecOps/
